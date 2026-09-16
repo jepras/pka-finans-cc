@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Session 1 · Chat · Afstemning af investeringsomkostninger</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2392004D%22/><rect x=%2224%22 y=%2254%22 width=%2214%22 height=%2226%22 fill=%22white%22/><rect x=%2243%22 y=%2236%22 width=%2214%22 height=%2244%22 fill=%22white%22/><rect x=%2262%22 y=%2220%22 width=%2214%22 height=%2260%22 fill=%22white%22/></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --muted: #f6f2f4;
+      --muted-foreground: #6f6369;
+      --border: #e4dde1;
+      --primary: #92004D;
+      --primary-hover: #660036;
+      --primary-foreground: #ffffff;
+      --ruby: #CE0060;
+      --bordeaux: #660036;
+      --warm-grey: #ACA39A;
+      --mint: #9EDFCE;
+      --lilac: #C5AED5;
+      --powder: #E88F80;
+      --sky: #6E9BAA;
+      --yellow: #EFC47C;
+      --leaf: #85B499;
+      --radius: 10px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .08), transparent 36%),
+        radial-gradient(circle at 86% 12%, rgba(146, 0, 77, .06), transparent 40%),
+        linear-gradient(180deg, rgba(245, 241, 243, .85), rgba(251, 250, 251, 0) 520px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 22px 120px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 20px;
+      color: var(--bordeaux);
+      font-size: clamp(32px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -.01em;
+    }
+    h2 {
+      margin: 0 0 6px;
+      color: var(--bordeaux);
+      font-size: 22px;
+      line-height: 1.2;
+    }
+    h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    p { margin-bottom: 16px; color: #3f3a3d; }
+    p.lead { font-size: 19.5px; color: #2f1b25; line-height: 1.5; margin-bottom: 0; max-width: 60ch; }
+    p.muted { color: var(--muted-foreground); font-size: 14.5px; }
+
+    code {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--muted);
+      padding: 1px 6px;
+      color: var(--bordeaux);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .9em;
+    }
+
+    a { color: var(--primary); text-decoration: none; border-bottom: 1px solid rgba(146, 0, 77, .3); }
+    a:hover { border-bottom-color: var(--primary); }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .01em;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--ruby);
+      box-shadow: 0 0 0 4px rgba(206, 0, 96, .14);
+    }
+
+    .toc {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 20px 24px;
+      margin: 40px 0 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+    }
+    .toc h3 { margin-bottom: 12px; color: var(--bordeaux); font-size: 17px; letter-spacing: .01em; }
+    .toc ol { margin: 0; padding-left: 22px; color: var(--muted-foreground); font-size: 14.5px; }
+    .toc li { margin: 9px 0; }
+    .toc li b { color: var(--foreground); }
+
+    /* Baggrund, foldet sammen så toppen er let at skimme */
+    details.context {
+      margin: 16px 0 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      overflow: hidden;
+    }
+    details.context > summary {
+      padding: 13px 24px;
+      cursor: pointer;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--primary);
+      list-style: none;
+    }
+    details.context > summary::-webkit-details-marker { display: none; }
+    details.context > summary::before { content: "\25B8  "; }
+    details.context[open] > summary::before { content: "\25BE  "; }
+    details.context[open] > summary { border-bottom: 1px solid var(--border); }
+    details.context .context-body { padding: 18px 24px 4px; }
+    details.context p { font-size: 15px; }
+
+    /* A phase = one big numbered section */
+    .phase {
+      position: relative;
+      margin: 76px 0 0;
+      padding: 36px 0 0;
+      border-top: 1px solid var(--border);
+    }
+    .phase:first-of-type { border-top: 0; padding-top: 0; margin-top: 56px; }
+
+    .phase-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      margin-bottom: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .phase > p { font-size: 16px; }
+
+    /* A step inside a phase */
+    .step {
+      margin: 28px 0;
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .03);
+    }
+    .step-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(146, 0, 77, .08);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .01em;
+    }
+    .step p { margin: 10px 0; }
+
+    /* Materials: downloadable workshop files */
+    .materials {
+      margin: 14px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--muted);
+    }
+    .materials h3 { font-size: 11px; letter-spacing: .01em; color: var(--muted-foreground); margin-bottom: 8px; }
+    .materials ul { margin: 0; padding-left: 18px; }
+    .materials li { margin: 5px 0; font-size: 14.5px; }
+    .materials .kind { color: var(--muted-foreground); font-size: 12.5px; }
+
+    /* Prompt-box: user-typed prompt */
+    .prompt {
+      position: relative;
+      margin: 14px 0;
+      padding: 14px 124px 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #1f1b1f;
+      color: #f3f6f6;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 104px;
+      justify-content: center;
+      padding: 7px 14px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background: var(--ruby);
+      color: #fff;
+      font-family: inherit;
+      font-size: 12.5px;
+      letter-spacing: .01em;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .35);
+      transition: background .15s ease, transform .1s ease, box-shadow .15s ease;
+    }
+    .copy-btn::before {
+      content: "";
+      width: 11px;
+      height: 13px;
+      border: 1.6px solid currentColor;
+      border-radius: 2.5px;
+      box-shadow: 3px -3px 0 -1.6px currentColor, 3px -3px 0 0 currentColor;
+      flex: none;
+      margin-left: 3px;
+    }
+    .copy-btn:hover { background: #e2126f; box-shadow: 0 2px 10px rgba(206, 0, 96, .45); }
+    .copy-btn:active { transform: translateY(1px); }
+    .copy-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .copy-btn.copied { background: #4f8f6b; box-shadow: 0 1px 6px rgba(0, 0, 0, .3); }
+    .copy-btn.copied::before {
+      width: 5px;
+      height: 10px;
+      border-width: 0 2px 2px 0;
+      border-radius: 0;
+      box-shadow: none;
+      transform: rotate(42deg) translate(-1px, -1px);
+    }
+    .prompt::before {
+      content: "Prompt";
+      display: inline-block;
+      margin: -2px 8px 4px -2px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(206, 0, 96, .3);
+      color: #f5d6e3;
+      font-size: 10.5px;
+      letter-spacing: .01em;
+      font-weight: 700;
+      vertical-align: top;
+    }
+
+    /* Long prompt: collapsed by default so the page stays readable */
+    details.prompt-fold {
+      margin: 14px 0;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--card);
+      overflow: hidden;
+    }
+    details.prompt-fold > summary {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--primary);
+      list-style: none;
+    }
+    details.prompt-fold > summary::-webkit-details-marker { display: none; }
+    details.prompt-fold > summary::before { content: "▸ "; }
+    details.prompt-fold[open] > summary::before { content: "▾ "; }
+    details.prompt-fold[open] > summary { border-bottom: 1px solid var(--border); }
+    details.prompt-fold .prompt { margin: 0; border: 0; border-radius: 0; }
+    details.prompt-fold .prompt::before { content: "Prompt. Indsæt hele blokken"; }
+
+    /* Action callout (do this in the UI) */
+    .action {
+      margin: 14px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(110, 155, 170, .35);
+      border-radius: 7px;
+      background: rgba(110, 155, 170, .1);
+      color: #2c4d57;
+      font-size: 14.5px;
+    }
+    .action::before {
+      content: "Gør";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(110, 155, 170, .25);
+      color: #2c4d57;
+      font-size: 10.5px;
+      letter-spacing: .01em;
+      font-weight: 700;
+    }
+
+    /* Expectation block */
+    .expect {
+      margin: 14px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(133, 180, 153, .4);
+      border-radius: 7px;
+      background: rgba(133, 180, 153, .12);
+      color: #305e44;
+      font-size: 14.5px;
+    }
+    .expect::before {
+      content: "Forvent";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(133, 180, 153, .26);
+      color: #305e44;
+      font-size: 10.5px;
+      letter-spacing: .01em;
+      font-weight: 700;
+    }
+
+    /* Insight / why-this-matters callout */
+    .insight {
+      margin: 18px 0 2px;
+      padding: 12px 14px;
+      border-left: 4px solid var(--yellow);
+      background: rgba(239, 196, 124, .12);
+      border-radius: 0 7px 7px 0;
+      color: #6b4a08;
+      font-size: 14.5px;
+    }
+    .insight strong { color: #4d3406; }
+
+    /* Hint / aside */
+    .hint {
+      margin: 14px 0;
+      padding: 10px 13px;
+      border: 1px dashed var(--border);
+      border-radius: 7px;
+      background: #fefcfa;
+      color: var(--muted-foreground);
+      font-size: 13.5px;
+    }
+    .hint::before {
+      content: "Hint";
+      font-weight: 700;
+      color: var(--bordeaux);
+      margin-right: 8px;
+    }
+
+
+    /* Final brief box */
+    .mission {
+      margin: 28px 0 0;
+      padding: 22px 24px;
+      border: 1px solid rgba(146, 0, 77, .25);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(146, 0, 77, .07), rgba(146, 0, 77, .02));
+    }
+    .mission .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--ruby);
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: .01em;
+      font-weight: 760;
+    }
+    .mission h3 { font-size: 20px; color: var(--bordeaux); margin-bottom: 6px; }
+    .mission p { color: #3f3a3d; font-size: 15.5px; }
+
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Session 1 · Claude Chat · Guidet opgave</div>
+    <h1>Afstem en forvalterfaktura mod jeres egen bogføring, og byg selv værktøjet</h1>
+    <p class="lead">Du bygger et afstemningsværktøj. Du lægger en forvalterfaktura og jeres bogføringsfil ind, og værktøjet stiller de to op mod hinanden linje for linje: hvad stemmer, hvad afviger, og hvad er slet ikke bogført. Hver linje kan krydses af undervejs, så du kan se hvor langt du er. Alt sammen bygget i Claude, uden en linje kode i forvejen.</p>
+
+    <div class="toc">
+      <h3>De fem faser</h3>
+      <ol>
+        <li><b>Find materialet og opret et Project.</b> To kontekstfiler i Knowledge.</li>
+        <li><b>Tjek at Claude kan se materialet.</b> Ét spørgsmål.</li>
+        <li><b>Byg afstemningsværktøjet.</b> Upload, tabel, status.</li>
+        <li><b>Gør det til et arbejdsredskab.</b> Afkrydsning og fremdrift.</li>
+        <li><b>Visualiseringer.</b> Den åbne opgave, som du løser solo.</li>
+      </ol>
+    </div>
+
+    <details class="context">
+      <summary>Baggrund: hvorfor lige denne opgave</summary>
+      <div class="context-body">
+        <p>PKA's team for investeringsomkostninger modtager kvartalsvise forvaltningshonorarer fra eksterne kapitalforvaltere og skal afstemme dem mod egen bogføring. Det ene datasæt er transaktionelt (bogføringen), det andet skal du <em>lede efter</em> i et dokument (fakturaen).</p>
+        <p>Claude kan bygge et selvstændigt artifact direkte i samtalen. Undervejs møder du <strong>Projects</strong>, <strong>Artifacts</strong> og iterativ udbygning. Til sidst står du med et lille værktøj, I selv kan style, teste og udvide.</p>
+      </div>
+    </details>
+
+    <!-- ───────────────────────── FASE 1 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">1</div>
+      <h2>Find materialet og opret et Project</h2>
+      <p>Et Project er det fælles fundament. Her lægger du <em>konteksten</em> ind: hvad opgaven går ud på, og hvordan data ser ud. Selve tallene kommer først ind senere, i værktøjet. Den opdeling er med vilje, for konteksten er den samme hvert kvartal, mens tallene skiftes ud.</p>
+
+      <div class="step">
+        <span class="step-label">1.1 Find filerne på din egen maskine</span>
+        <p>Filerne ligger allerede i det materiale, du hentede ned. Du skal ikke downloade noget igen. De ligger i <b>to mapper</b>, og det er vigtigt at holde dem adskilt.</p>
+        <div class="action">Åbn den mappe, du pakkede ud, og find <code>session1-chat/</code>. Lad vinduet stå åbent, du skal bruge begge mapper undervejs.</div>
+        <div class="materials">
+          <h3>project, skal i projektets Knowledge nu</h3>
+          <ul>
+            <li><code>projekt-kontekst.md</code> <span class="kind">· rammen om opgaven og den rolle, Claude arbejder i</span></li>
+            <li><code>afstemnings-kontekst.md</code> <span class="kind">· hvordan fakturaen og bogføringsfilen er bygget op</span></li>
+          </ul>
+        </div>
+        <div class="materials">
+          <h3>artifact-uploads, skal først bruges i fase 3</h3>
+          <ul>
+            <li><code>Faktura_NordicCapitalPartners_Q1_2026.pdf</code> <span class="kind">· forvalterfaktura, Q1 2026</span></li>
+            <li><code>PKA_bogforte_investeringsomkostninger.csv</code> <span class="kind">· jeres bogføring, semikolon-separeret</span></li>
+          </ul>
+        </div>
+        <p class="muted">Kontekstfilerne beskriver opgaven og datamodellen. Datafilerne er selve kvartalets tal, og dem uploader du i værktøjet, når det er bygget.</p>
+        <div class="hint">Mangler du materialet, så hent <a href="https://github.com/jepras/pka-finans-cc/archive/refs/heads/main.zip">zip-filen med hele workshopmaterialet</a> og pak den ud, før du går videre.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.2 Opret Projectet</span>
+        <div class="action">I Claude: klik <b>Projects</b> i sidebaren → <b>New project</b>. Kald det <code>PKA Investeringsomkostninger Q1 2026</code>.</div>
+        <div class="action">Træk <b>de to filer</b> fra <code>session1-chat/project/</code> ind i projektets <b>Knowledge</b>. Datafilerne skal <b>ikke</b> ind her.</div>
+        <div class="action">Start en ny samtale <b>inde i projektet</b>, ikke en almindelig samtale uden Project.</div>
+        <div class="expect">De to kontekstfiler står listet under projektets Knowledge, og den nye samtale viser at den har adgang til dem.</div>
+        <div class="insight"><strong>Hvorfor det er vigtigt:</strong> Knowledge er det, der gælder på tværs af alle samtaler i projektet. Beskrivelsen af opgaven og datamodellen ændrer sig ikke fra kvartal til kvartal, så den lægger du fast. Tallene skifter hver gang, så dem holder du ude.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 2 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">2</div>
+      <h2>Tjek at Claude kan se materialet</h2>
+      <p>Konteksten ligger nu i projektets Knowledge. Før du bygger noget, så få det bekræftet med ét spørgsmål, så du ved, at Claude rent faktisk arbejder ud fra den.</p>
+
+      <div class="step">
+        <span class="step-label">2.1 Spørg Claude, hvad den kan se</span>
+        <div class="prompt">Giv mig et kort overblik over det, der ligger i dette projekts Knowledge. Hvad går opgaven ud på, hvilke to datakilder arbejder vi med, og hvilke mandater indgår?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Claude kan gengive opgaven og datamodellen, uden at du har uploadet noget i selve samtalen, og uden at have set en eneste faktura endnu.</div>
+        <div class="insight"><strong>Læringen:</strong> Alt hvad der ligger i Knowledge, er med i hver eneste samtale i projektet. Du skal ikke vedhæfte det igen, og du behøver ikke forklare opgaven forfra næste gang.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 3 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">3</div>
+      <h2>Byg afstemningsværktøjet</h2>
+      <p>Nu bygger vi første version: den skal kunne læse en faktura og en bogføringsfil, og vise hvilke linjer der stemmer og ikke stemmer. Prompten beskriver <em>hvad</em> værktøjet skal kunne og hvad der tæller som en afvigelse. Den forklarer ikke filernes opbygning, for den ligger allerede i Knowledge.</p>
+
+      <div class="step">
+        <span class="step-label">3.1 Sæt specifikationen</span>
+        <p>Bliv i samme samtale. Indsæt hele prompten nedenfor.</p>
+        <details class="prompt-fold">
+          <summary>Vis byggeprompten, indsæt hele blokken</summary>
+          <div class="prompt">Byg nu selve værktøjet: et React-artifact uden backend og uden eksterne API-kald, der afstemmer forvalterfakturaer mod PKA's egen bogføring.
+
+Du kender allerede materialets struktur fra projektets Knowledge. Brug den, så en afstemningslinje kun opstår ud fra et rigtigt mandat, og ikke ud af fakturanumre, adresser, CVR eller noter.
+
+Sådan skal det virke:
+- To upload-felter: fakturaer (PDF, læs teksten med pdfjs) og CSV med de bogførte transaktioner.
+- Én afstemningstabel som hovedelement: Mandat, Aktivklasse, Faktureret, Bogført, Afvigelse, Status. Match på mandatet.
+- KPI-kort i toppen: samlet faktureret, samlet bogført, total afvigelse og antal linjer der kræver opmærksomhed.
+- Hver række kan foldes ud og vise fakturadetaljerne bag linjen: fakturanr., fakturadato, AUM og honorarsats.
+- Status-badges: grøn ved afvigelse under 5.000 kr., gul mellem 5.000 og 200.000 kr., rød ved manglende bogføring eller afvigelse over 200.000 kr.
+- En lille inline-bar i Afvigelse-kolonnen, der sammenligner faktureret og bogført.
+
+Design: shadcn/ui-stil med rounded-xl kort og subtile skygger. PKA-rød (#92004D) som primær, rubinrød (#CE0060) til aktive states og highlights, bordeaux (#660036) til overskrifter, lys off-white baggrund (#FBFAFB), Inter eller system-ui. Hold koden i én komponent og brug Tailwind.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        </details>
+        <div class="expect">Claude åbner et <strong>Artifact</strong> til højre med to upload-felter, KPI-kort og en afstemningstabel.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">3.2 Test værktøjet med kvartalets tal</span>
+        <div class="action">Upload de to filer fra <code>session1-chat/artifact-uploads/</code> <b>i selve artifaktet</b>. Det er her, tallene kommer ind. Knowledge er Claudes reference, upload-felterne er værktøjets input.</div>
+        <div class="expect">Otte fakturalinjer i tabellen. Seks af dem stemmer mod bogføringen. To af dem gør ikke, og dem skal du selv finde.</div>
+        <div class="hint">Får du flere eller færre linjer end 8, så er det næsten altid PDF-parsingen der har fanget noget den ikke skulle (et fakturanummer, en adresse). Sig det til Claude direkte: "du har lavet en linje ud af X, det er ikke et mandat".</div>
+        <div class="insight"><strong>Læringen:</strong> Et lille, konkret værktøj med kendte data er hurtigere at bygge og teste end at bede om en generel analyse. Du kender svaret på forhånd, så du kan se om værktøjet har ret.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 4 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">4</div>
+      <h2>Gør det til et arbejdsredskab</h2>
+      <p>En afstemning er ikke færdig, fordi et værktøj har regnet på den. Den er færdig, når et menneske har taget stilling til hver linje. Det skal bygges ind.</p>
+
+      <div class="step">
+        <span class="step-label">4.1 Tilføj afkrydsning og fremdrift</span>
+        <p>Fortsæt i samme samtale og bed Claude udbygge det eksisterende artifact.</p>
+        <div class="prompt">Udbyg artifaktet: tilføj en afkrydsningsboks ("Afstemt af mig") på hver linje i afstemningstabellen. Tilføj en fremdriftsindikator i toppen ("X af Y linjer afstemt") med en progress bar i rubinrød. Gem afkrydsningsstatus i localStorage, så den ikke nulstilles ved genindlæsning. Tilføj en filterknap, der viser henholdsvis alle linjer, kun uafklarede, eller kun afstemte. Når alle linjer er afkrydset, vis en tydelig "Afstemning gennemført"-tilstand i KPI-kortene.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Kryds et par linjer af, genindlæs artifaktet, og tjek at afkrydsningen stadig er der.</div>
+        <div class="expect">Hver linje kan afkrydses. En fremdriftsbar viser hvor mange linjer der er afstemt, afkrydsningen overlever en genindlæsning, og du kan filtrere til kun uafklarede linjer.</div>
+        <div class="insight"><strong>Læringen:</strong> Et artifact kan bygges videre i små, afgrænsede skridt. I behøver ikke bestille hele værktøjet i én prompt. Det er ofte hurtigere at bede om tre ting ad gangen end tredive.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.2 Få afstemningen ud af værktøjet igen</span>
+        <p>En kollega, en revisor eller et referat skal kunne se resultatet uden at åbne dit artifact. Så skal tabellen kunne komme ud som en fil.</p>
+        <div class="prompt">Udbyg artifaktet med en eksportknap over afstemningstabellen: "Eksportér til CSV". Den skal lægge den viste tabel i en semikolon-separeret CSV med dansk talformat, så den kan åbnes direkte i Excel. Tag alle kolonner med (mandat, aktivklasse, faktureret, bogført, afvigelse, status) plus om linjen er afkrydset som afstemt, og hvilket bilagsnr. der ligger bag den bogførte post. Respektér det aktive filter, så det er de linjer, jeg kan se, der bliver eksporteret. Navngiv filen efter periode og dagens dato.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Klik på knappen, åbn filen, og se efter om bilagsnumrene er kommet med.</div>
+        <div class="expect">En CSV-fil der kan åbnes i Excel, med de samme linjer som skærmen viser, og med bilagsnr. på hver bogført linje.</div>
+        <div class="insight"><strong>Læringen:</strong> Et værktøj uden udgang er en blindgyde. Når resultatet kan eksporteres, kan det deles, vedlægges og arkiveres, og så kan afstemningen indgå i den dokumentation, der alligevel skal laves.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 5 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">5</div>
+      <h2>Solo: skaf mere data, og find mønstrene</h2>
+      <p>Nu arbejder du selv. Ét kvartal kan svare på "stemmer det?". Flere kvartaler kan svare på noget andet: "hvad plejer at ske, og hvor er det begyndt at skride?" Men du har kun ét kvartal. Det kan Claude lave om på.</p>
+
+      <div class="mission">
+        <span class="label">Opgave</span>
+        <h3>Få Claude til at lave mere data, og byg noget der giver indsigt</h3>
+        <p>Først skaffer du dig et datasæt over flere kvartaler. Derefter bygger du videre på værktøjet, så det ikke kun siger om tallene stemmer, men også fortæller dig hvor du skal kigge næste gang.</p>
+      </div>
+
+      <div class="step" style="margin-top: 22px;">
+        <span class="step-label">5.1 Bed Claude om et større datasæt</span>
+        <p>Claude kender allerede strukturen fra Knowledge, så den kan generere data der ligner det rigtige. Bliv i samme samtale.</p>
+        <div class="prompt">Jeg vil gerne have mere data at kigge på. Generer et syntetisk datasæt, der dækker de seneste 8 kvartaler, med de samme mandater og den samme struktur som materialet i dette projekts Knowledge.
+
+Lav to filer, jeg kan downloade:
+1. En faktureringsfil med én række pr. mandat pr. kvartal: periode, mandat, aktivklasse, region, AUM i DKK mio., honorarsats og faktureret beløb.
+2. En bogføringsfil i samme format som den CSV, jeg allerede bruger: bogføringsdato, periode, mandat, aktivklasse, region, modpart, beløb, bilagsnr. og kontonr.
+
+Gør tallene realistiske. AUM skal bevæge sig gradvist over tid i stedet for at springe, honorarsatserne skal være nogenlunde stabile, og performancehonoraret skal kun optræde i de kvartaler, hvor det giver mening.
+
+Læg et mindre antal fejl ind: et par manglende bogføringer, nogle beløb der afviger lidt, og et enkelt der afviger meget. Fortæl mig ikke hvilke. Gem en facitliste, som jeg kan bede om, når jeg selv har ledt.
+
+Brug semikolon som separator og dansk talformat, så filerne ligner dem, jeg allerede har.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Hent de to filer, og læs et par rækker igennem, før du bruger dem. Ser tallene ud som noget, I kunne have modtaget?</div>
+        <div class="expect">To filer med 8 kvartaler, som du kan uploade i dit værktøj i stedet for det ene kvartal. Værktøjet skal formentlig udbygges lidt, før det kan håndtere flere perioder.</div>
+        <div class="insight"><strong>Læringen:</strong> Manglende testdata er sjældent en god grund til at lade være. Syntetisk data, der ligner det rigtige, er nok til at finde ud af om et værktøj er værd at bygge, og det kan ligge på en offentlig maskine uden at nogen får ondt i maven.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.2 Byg noget, der giver indsigt</span>
+        <p>Herfra er der ingen færdige prompts. Vælg det spørgsmål, du selv ville stille, hvis tallene lå på dit bord, og bed Claude bygge det ind i værktøjet. Nogle retninger, der er værd at forfølge:</p>
+        <ul>
+          <li><strong>Den effektive honorarsats over tid.</strong> Regn faktisk betalt honorar om til bps af AUM pr. mandat pr. kvartal. Så kan du se, om en stigning skyldes at porteføljen er vokset, eller at satsen er kravlet.</li>
+          <li><strong>Hvem afviger igen og igen.</strong> Er det de samme mandater, der har afvigelser hvert kvartal, eller rammer det tilfældigt? Det ene er en proces, der skal rettes, det andet er støj.</li>
+          <li><strong>Afstanden fra faktura til bogføring.</strong> Antal dage fra fakturadato til bogføringsdato, kvartal for kvartal. Hvis den vokser, er det ikke tallene der er problemet, men arbejdsgangen.</li>
+          <li><strong>Koncentration.</strong> Hvor stor en andel af de samlede omkostninger ligger hos ét mandat eller én aktivklasse, og flytter den sig?</li>
+          <li><strong>Performancehonorarernes vægt.</strong> Hvor meget af regningen er basishonorar, og hvor meget afhænger af afkastet? Udviklingen over otte kvartaler er mere sigende end ét tal.</li>
+          <li><strong>Hvad ville en strammere tolerance have fanget?</strong> Lad brugeren skrue på tærsklen og se, hvor mange linjer der så ville kræve en forklaring.</li>
+        </ul>
+        <div class="hint">Formulér spørgsmålet før visualiseringen. Beder du om "nogle grafer", får du pynt. Beder du om "vis mig om den effektive honorarsats stiger på PKA Infrastructure", får du et svar.</div>
+        <div class="insight"><strong>Læringen:</strong> Afstemningen kigger bagud og spørger om tallene er rigtige. De samme data kan kigge fremad og pege på, hvor der skal stilles spørgsmål næste kvartal. Det er det skifte, der gør kontrolarbejde til noget, andre gider læse.</div>
+      </div>
+    </section>
+
+  </main>
+  <script>
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const host = btn.parentElement;
+        const text = Array.from(host.childNodes)
+          .filter((n) => n.nodeType === Node.TEXT_NODE || (n.nodeType === Node.ELEMENT_NODE && n !== btn))
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        try {
+          await navigator.clipboard.writeText(text);
+          const orig = btn.textContent;
+          btn.textContent = 'Kopieret';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+        } catch (e) {
+          btn.textContent = 'Fejl';
+          setTimeout(() => { btn.textContent = 'Kopier'; }, 1500);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
