@@ -46,6 +46,44 @@ export type KreditorRaekke = {
   andel: number;
 };
 
+/* ---------- Skema ("Se data") ---------- */
+
+export type SkemaKolonne = {
+  navn: string;
+  /** Typen som den står i databasen, fx TEXT eller REAL. Tom hvis den ikke er sat. */
+  type: string;
+  primaernoegle: boolean;
+};
+
+export type SkemaTabel = {
+  navn: string;
+  kolonner: SkemaKolonne[];
+  antalRaekker: number;
+  /** Én sætning om hvad en række i tabellen er. */
+  beskrivelse: string;
+};
+
+/** Sammenhæng mellem to tabeller: `fra` slår op i `til` via `kolonne`. */
+export type SkemaRelation = {
+  fra: string;
+  til: string;
+  kolonne: string;
+};
+
+export type Skema = {
+  tabeller: SkemaTabel[];
+  relationer: SkemaRelation[];
+};
+
+/** De første rækker af én tabel, som de står i databasen. */
+export type TabelUdsnit = {
+  tabel: string;
+  kolonner: string[];
+  raekker: SvarRaekke[];
+  /** Rækker i alt i tabellen — `raekker` er kun de første. */
+  antalRaekker: number;
+};
+
 /* ---------- Spørg-panel ---------- */
 
 export type Kilde = "claude" | "eksempelsvar";

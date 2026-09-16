@@ -1,15 +1,17 @@
-import { Building2, TriangleAlert } from "lucide-react";
+import { Building2, Table2, TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { KontogruppeGraf } from "./components/KontogruppeGraf.tsx";
 import { KreditorTabel } from "./components/KreditorTabel.tsx";
 import { Noegletal } from "./components/Noegletal.tsx";
+import { SkemaPanel } from "./components/SkemaPanel.tsx";
 import { SpoergPanel } from "./components/SpoergPanel.tsx";
 import { Badge } from "./components/ui/badge.tsx";
+import { Button } from "./components/ui/button.tsx";
 import { Card, CardContent } from "./components/ui/card.tsx";
 import { Skeleton } from "./components/ui/skeleton.tsx";
 import { formatPeriode } from "./lib/format.ts";
-import type { DashboardData } from "./types.ts";
+import type { DashboardData, Svar } from "./types.ts";
 
 type Tilstand =
   | { status: "henter" }
@@ -46,6 +48,8 @@ function Fejl({ besked }: { besked: string }) {
 
 export function App() {
   const [tilstand, setTilstand] = useState<Tilstand>({ status: "henter" });
+  const [skemaAabent, setSkemaAabent] = useState(false);
+  const [sidsteSvar, setSidsteSvar] = useState<Svar | null>(null);
 
   useEffect(() => {
     const afbryd = new AbortController();
@@ -87,9 +91,20 @@ export function App() {
               </p>
             </div>
           </div>
-          <Badge variant="aktiv" className="w-fit">
-            Syntetiske data
-          </Badge>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              variant="sekundaer"
+              size="sm"
+              onClick={() => setSkemaAabent(true)}
+              aria-haspopup="dialog"
+            >
+              <Table2 className="size-4" aria-hidden />
+              Se data
+            </Button>
+            <Badge variant="aktiv" className="w-fit">
+              Syntetiske data
+            </Badge>
+          </div>
         </div>
       </header>
 
@@ -105,8 +120,14 @@ export function App() {
         )}
 
         {/* Spørg-panelet henter selv sin status og virker også, hvis dashboardet fejler. */}
-        <SpoergPanel />
+        <SpoergPanel onSvar={setSidsteSvar} />
       </main>
+
+      <SkemaPanel
+        aaben={skemaAabent}
+        onLuk={() => setSkemaAabent(false)}
+        sql={sidsteSvar?.sql ?? null}
+      />
 
       <footer className="mx-auto max-w-[1400px] px-6 pb-10 text-xs text-muted-foreground">
         Tal, kreditorer og navne i datasættet er opdigtede. Databasen læses read-only.

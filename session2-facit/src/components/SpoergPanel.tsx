@@ -194,13 +194,19 @@ function Svarvisning({ svar }: { svar: Svar }) {
   );
 }
 
-export function SpoergPanel() {
+export function SpoergPanel({ onSvar }: { onSvar?: (svar: Svar | null) => void }) {
   const [status, setStatus] = useState<Status | null>(null);
   const [forslag, setForslag] = useState<Forslag[]>([]);
   const [tekst, setTekst] = useState("");
   const [arbejder, setArbejder] = useState(false);
-  const [svar, setSvar] = useState<Svar | null>(null);
+  const [svar, setSvarTilstand] = useState<Svar | null>(null);
   const [fejl, setFejl] = useState<{ besked: string; sql?: string } | null>(null);
+
+  /** Svaret deles med resten af siden, så "Se data" kan fremhæve de brugte tabeller. */
+  function setSvar(nyt: Svar | null) {
+    setSvarTilstand(nyt);
+    onSvar?.(nyt);
+  }
 
   useEffect(() => {
     const afbryd = new AbortController();

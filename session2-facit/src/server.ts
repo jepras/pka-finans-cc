@@ -1,5 +1,5 @@
 import index from "../index.html";
-import { hentDashboard } from "./db.ts";
+import { hentDashboard, hentSkema, hentTabeludsnit } from "./db.ts";
 import { EKSEMPELSVAR } from "./eksempelsvar.ts";
 import { erSvar, gemRapport } from "./rapport.ts";
 import { besvar, status } from "./spoerg.ts";
@@ -12,6 +12,21 @@ const server = Bun.serve({
   routes: {
     "/api/dashboard": {
       GET: () => Response.json(hentDashboard()),
+    },
+
+    /** Tabeller, kolonner og sammenhænge, læst af databasen selv. */
+    "/api/skema": {
+      GET: () => Response.json(hentSkema()),
+    },
+
+    /** De første rækker af én tabel til "Se data". */
+    "/api/tabel/:navn": {
+      GET: (req) => {
+        const udsnit = hentTabeludsnit(req.params.navn);
+        return udsnit
+          ? Response.json(udsnit)
+          : Response.json({ fejl: "Tabellen findes ikke i databasen." }, { status: 404 });
+      },
     },
 
     /** Kører appen med Claude eller med eksempelsvar? */

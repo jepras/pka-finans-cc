@@ -47,6 +47,20 @@ Tabeller: `transaktioner` (~3.300 rækker), `kontoplan` (27), `kreditorer` (32),
 Beløbskonvention: `beloeb` er ekskl. moms og er det, dashboardet regner omkostningsbase på.
 `moms` vises separat og lægges ikke til omkostningsbasen.
 
+## Se data
+
+Knappen "Se data" i headeren åbner et panel med databasens seks tabeller som kort: kolonner
+med type, én sætning om hvad en række er, og antal rækker. Linjer mellem kortene viser, hvilken
+kolonne der binder to tabeller sammen, med den mest forbundne tabel (transaktioner) i midten.
+Klik på et kort henter de første 20 rækker af tabellen og viser dem med dansk talformat.
+Er der et svar i spørg-panelet, fremhæves de tabeller, svarets SQL læste fra.
+
+Skemaet læses af databasen selv (`sqlite_master`, `PRAGMA table_info`), ikke af en fast liste,
+så panelet også virker med et andet udtræk. Sammenhængene tages fra erklærede fremmednøgler,
+hvis filen har dem, og udledes ellers af skemaet: samme kolonnenavn i to tabeller, hvor
+værdierne er entydige i mindst den ene. Beskrivelserne af de kendte tabeller står i
+`src/skema.ts`; en ukendt tabel får en sætning dannet ud fra sin nøgle.
+
 ## Spørg-panel
 
 Brugeren skriver et spørgsmål på dansk og får fire ting: den SQL der blev kørt, en forklaring
@@ -87,16 +101,18 @@ index.html              indgang, importeres af serveren
 bunfig.toml             registrerer bun-plugin-tailwind for serve.static (påkrævet, se nedenfor)
 .env                    ANTHROPIC_API_KEY (Bun indlæser selv filen)
 rapporter/              gemte svar som Markdown, dannes ved første gemning
-src/server.ts           Bun.serve: HTML-route + /api/dashboard, /api/status, /api/eksempler,
-                        /api/spoerg, /api/rapport
+src/server.ts           Bun.serve: HTML-route + /api/dashboard, /api/skema, /api/tabel/:navn,
+                        /api/status, /api/eksempler, /api/spoerg, /api/rapport
 src/rapport.ts          bygger og gemmer Markdown-rapporten
-src/db.ts               read-only forbindelse, dashboard-SQL og koerLaesning() til frie forespørgsler
+src/db.ts               read-only forbindelse, dashboard-SQL, skemaopslag og koerLaesning()
+                        til frie forespørgsler
+src/skema.ts            tolkning af skemaet: beskrivelser, relationer, søjleplacering
 src/sql-vagt.ts         godkender SQL udefra — kun læsning
 src/ai.ts               Claude via Vercel AI SDK, skema for svaret
 src/eksempelsvar.ts     fast sæt svar uden API-nøgle
 src/spoerg.ts           spørgsmål → SQL → kørsel → svar
 src/types.ts            delte typer mellem server og klient
-src/App.tsx             dashboard-layout + spørg-panel
+src/App.tsx             dashboard-layout + spørg-panel + "Se data"
 src/components/         domænekomponenter + ui/ i shadcn-stil
 src/lib/format.ts       dansk tal-, kr.- og procentformatering
 src/lib/theme.ts        graffarver og kontogruppe-mapping

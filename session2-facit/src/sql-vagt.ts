@@ -104,6 +104,24 @@ function cteNavne(renset: string): string[] {
     .filter((n): n is string => Boolean(n));
 }
 
+/**
+ * Hvilke af de kendte tabeller læser SQL'en fra? Bruges til at fremhæve dem i
+ * "Se data" — ikke til sikkerhed, den del er godkendLaesning.
+ */
+export function tabellerISql(sql: string, kendte: readonly string[]): string[] {
+  const renset = udenStrengeOgKommentarer(sql);
+  const efterNavn = new Map(kendte.map((navn) => [navn.toLowerCase(), navn]));
+  const brugte = new Set<string>();
+
+  for (const m of renset.matchAll(/\b(?:from|join)\s+([^\s(,;]+)/gi)) {
+    const kilde = m[1]!.replace(/["'`\[\]]/g, "").toLowerCase();
+    const navn = efterNavn.get(kilde);
+    if (navn) brugte.add(navn);
+  }
+
+  return [...brugte];
+}
+
 export function godkendLaesning(raa: string): VagtSvar {
   const sql = raa.trim().replace(/;\s*$/, "").trim();
   if (!sql) return { ok: false, grund: "Tom forespørgsel." };

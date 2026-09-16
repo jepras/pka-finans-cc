@@ -2,6 +2,7 @@ import { Database } from "bun:sqlite";
 import { join } from "node:path";
 
 import { sorterKontogrupper } from "./lib/theme.ts";
+import { beskrivTabel, udledRelationer, type KolonneFakta, type TabelFakta } from "./skema.ts";
 import { godkendLaesning, RAEKKEGRAENSE, TILLADTE_TABELLER } from "./sql-vagt.ts";
 import type {
   DashboardData,
@@ -10,7 +11,10 @@ import type {
   Kvartal,
   KvartalsRaekke,
   Noegletal,
+  Skema,
+  SkemaRelation,
   SvarRaekke,
+  TabelUdsnit,
 } from "./types.ts";
 
 const DB_STI = join(import.meta.dir, "..", "data", "finanskube-2025.sqlite");
@@ -224,6 +228,145 @@ export function skemaDDL(): string {
     .filter((t) => tilladte.has(t.name) && t.sql)
     .map((t) => `${t.sql!.trim()};`)
     .join("\n\n");
+}
+
+/* ---------- Skema til "Se data" ---------- */
+
+/** Antal rækker panelet viser, når man åbner en tabel. */
+export const UDSNITSGRAENSE = 20;
+
+/**
+ * Tabellerne i filen, uden SQLites egne. Læses én gang: databasen er et statisk
+ * udtræk, og navnene er samtidig den liste, tabelopslag valideres mod.
+ */
+let tabelnavne: string[] | null = null;
+
+function navne(): string[] {
+  tabelnavne ??= skemaQuery
+    .all()
+    .map((t) => t.name)
+    .filter((navn) => !navn.startsWith("sqlite_"));
+  return tabelnavne;
+}
+
+export function erTabel(navn: string): boolean {
+  return navne().includes(navn);
+}
+
+/**
+ * Tabel- og kolonnenavne sættes ind i SQL'en frem for som parametre — PRAGMA og
+ * FROM tager ikke bindinger. Begge dele kommer fra databasens eget skema og er
+ * slået op i `navne()` først, så der er ingen vej ind udefra.
+ */
+function citer(navn: string): string {
+  return `"${navn.replace(/"/g, '""')}"`;
+}
+
+type PragmaKolonne = { name: string; type: string; pk: number };
+type PragmaFremmednoegle = { table: string; from: string };
+
+function antalRaekker(tabel: string): number {
+  return db.query<{ antal: number }, []>(`SELECT COUNT(*) AS antal FROM ${citer(tabel)}`).get()!
+    .antal;
+}
+
+function forskelligeVaerdier(tabel: string, kolonne: string): number {
+  return db
+    .query<{ antal: number }, []>(
+      `SELECT COUNT(DISTINCT ${citer(kolonne)}) AS antal FROM ${citer(tabel)}`,
+    )
+    .get()!.antal;
+}
+
+/** Erklærede fremmednøgler, hvis udtrækket har dem. Tomt for Finanskube-filen. */
+function erklaeredeRelationer(tabeller: string[]): SkemaRelation[] {
+  return tabeller.flatMap((tabel) =>
+    db
+      .query<PragmaFremmednoegle, []>(`PRAGMA foreign_key_list(${citer(tabel)})`)
+      .all()
+      .filter((fk) => tabeller.includes(fk.table))
+      .map((fk) => ({ fra: tabel, til: fk.table, kolonne: fk.from })),
+  );
+}
+
+function tabelFakta(): TabelFakta[] {
+  const raa = navne().map((navn) => ({
+    navn,
+    antal: antalRaekker(navn),
+    kolonner: db.query<PragmaKolonne, []>(`PRAGMA table_info(${citer(navn)})`).all(),
+  }));
+
+  // Kun kolonnenavne, der går igen i flere tabeller, kan være en sammenhæng —
+  // og kun dem tæller vi forskellige værdier på.
+  const forekomster = new Map<string, number>();
+  for (const t of raa) {
+    for (const k of t.kolonner) forekomster.set(k.name, (forekomster.get(k.name) ?? 0) + 1);
+  }
+
+  return raa.map((t) => ({
+    navn: t.navn,
+    antalRaekker: t.antal,
+    kolonner: t.kolonner.map(
+      (k): KolonneFakta => ({
+        navn: k.name,
+        type: k.type,
+        primaernoegle: k.pk > 0,
+        entydig:
+          k.pk > 0 ||
+          ((forekomster.get(k.name) ?? 0) > 1 &&
+            t.antal > 0 &&
+            forskelligeVaerdier(t.navn, k.name) === t.antal),
+      }),
+    ),
+  }));
+}
+
+let skemaCache: Skema | null = null;
+
+/** Hele skemaet som panelet tegner det. Læses af filen selv, ikke af en fast liste. */
+export function hentSkema(): Skema {
+  if (skemaCache) return skemaCache;
+
+  const fakta = tabelFakta();
+
+  skemaCache = {
+    tabeller: fakta.map((t) => ({
+      navn: t.navn,
+      antalRaekker: t.antalRaekker,
+      beskrivelse: beskrivTabel(t),
+      kolonner: t.kolonner.map(({ navn, type, primaernoegle }) => ({
+        navn,
+        type,
+        primaernoegle,
+      })),
+    })),
+    relationer: udledRelationer(fakta, erklaeredeRelationer(navne())),
+  };
+
+  return skemaCache;
+}
+
+/** De første rækker af én tabel. Navnet skal være en tabel i filen. */
+export function hentTabeludsnit(tabel: string): TabelUdsnit | null {
+  if (!erTabel(tabel)) return null;
+
+  const stmt = db.prepare<SvarRaekke, []>(
+    `SELECT * FROM ${citer(tabel)} LIMIT ${UDSNITSGRAENSE}`,
+  );
+
+  try {
+    const raekker = stmt.all();
+    const fraStmt = (stmt as unknown as { columnNames?: string[] }).columnNames;
+
+    return {
+      tabel,
+      kolonner: fraStmt?.length ? fraStmt : Object.keys(raekker[0] ?? {}),
+      raekker,
+      antalRaekker: antalRaekker(tabel),
+    };
+  } finally {
+    stmt.finalize();
+  }
 }
 
 export type LaesningResultat =
