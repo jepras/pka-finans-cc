@@ -118,6 +118,31 @@
     .toc li { margin: 9px 0; }
     .toc li b { color: var(--foreground); }
 
+    /* Sidespor, noget man kan lave mens man venter */
+    details.sidetrack {
+      margin: 14px 0 0;
+      border: 1px dashed rgba(146, 0, 77, .35);
+      border-radius: 7px;
+      background: rgba(146, 0, 77, .035);
+      overflow: hidden;
+    }
+    details.sidetrack > summary {
+      padding: 11px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      list-style: none;
+    }
+    details.sidetrack > summary::-webkit-details-marker { display: none; }
+    details.sidetrack > summary::before { content: "\25B8  "; }
+    details.sidetrack[open] > summary::before { content: "\25BE  "; }
+    details.sidetrack[open] > summary { border-bottom: 1px dashed rgba(146, 0, 77, .25); }
+    details.sidetrack .sidetrack-body { padding: 16px 16px 18px; }
+    details.sidetrack .sidetrack-body > p { font-size: 14.5px; }
+    details.sidetrack h4 { margin: 18px 0 4px; font-size: 14.5px; color: var(--bordeaux); }
+    details.sidetrack h4:first-child { margin-top: 0; }
+
     /* Preview af det færdige værktøj */
     figure.preview {
       margin: 32px 0 0;
@@ -489,6 +514,31 @@ Sådan skal det virke:
 Design: shadcn/ui-stil med rounded-xl kort og subtile skygger. PKA-rød (#92004D) som primær, rubinrød (#CE0060) til aktive states og highlights, bordeaux (#660036) til overskrifter, lys off-white baggrund (#FBFAFB), Inter eller system-ui. Hold koden i én komponent og brug Tailwind.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         </details>
         <div class="expect">Claude åbner et <strong>Artifact</strong> til højre med to upload-felter, KPI-kort og en afstemningstabel.</div>
+        <p>Der kan gå op til fem minutter, før artifaktet er skrevet færdigt. Lad fanen stå, og skriv ikke i samme samtale imens, det afbryder den.</p>
+        <div class="hint">Dit fokus er afstemningsværktøjet. Vent til det er færdigt, og gå så videre til fase 3.2. Kan du ikke sidde stille, er der et sidespor nedenfor.</div>
+
+        <details class="sidetrack">
+          <summary>Sidespor: begynd at tænke over din egen idé imens</summary>
+          <div class="sidetrack-body">
+            <p>Start en <b>ny samtale i samme Project</b>, så den første kan bygge i fred. Vælg den af de to prompts, der passer på dig. Begge beder Claude om at være sparringspartner frem for at aflevere svaret, så det er dig der tænker.</p>
+
+            <h4>Hvis du ikke har en idé endnu</h4>
+            <div class="prompt">Jeg er til en workshop og venter på, at noget andet bliver bygget færdigt. Hjælp mig i mellemtiden med at finde en idé til et værktøj, jeg selv kunne bygge med Claude i min hverdag.
+
+Stil mig ét spørgsmål ad gangen om mit arbejde, og vent på mit svar, før du stiller det næste. Hold dine beskeder korte, højst et par linjer. Foreslå ikke løsninger undervejs og skriv ikke lange lister, det er mig, der skal tænke højt.
+
+Efter fem til syv spørgsmål samler du den bedste idé i højst ti linjer: hvad værktøjet gør, hvilke data det skal bruge, og hvad jeg får ud af det.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+
+            <h4>Hvis du allerede har en idé</h4>
+            <div class="prompt">Jeg vil gerne bygge det her med Claude: [skriv din idé med et par sætninger].
+
+Vær sparringspartner, ikke leverandør. Stil mig ét spørgsmål ad gangen for at skærpe idéen, og vent på mit svar. Hold dine beskeder korte, højst et par linjer. Skriv ikke løsningen eller koden for mig endnu, jeg vil selv formulere, hvad værktøjet skal kunne.
+
+Sig til undervejs, hvis du hører noget, der gør idéen svær at bygge, eller som bliver et problem med rigtige data.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+
+            <p class="muted">Gem det, du kommer frem til. Det er det, du kan arbejde videre med efter workshoppen.</p>
+          </div>
+        </details>
       </div>
 
       <div class="step">
