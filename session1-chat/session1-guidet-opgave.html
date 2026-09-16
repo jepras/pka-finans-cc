@@ -117,29 +117,6 @@
     .toc li { margin: 9px 0; }
     .toc li b { color: var(--foreground); }
 
-    /* Baggrund, foldet sammen så toppen er let at skimme */
-    details.context {
-      margin: 16px 0 0;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--card);
-      overflow: hidden;
-    }
-    details.context > summary {
-      padding: 13px 24px;
-      cursor: pointer;
-      font-size: 14.5px;
-      font-weight: 700;
-      color: var(--primary);
-      list-style: none;
-    }
-    details.context > summary::-webkit-details-marker { display: none; }
-    details.context > summary::before { content: "\25B8  "; }
-    details.context[open] > summary::before { content: "\25BE  "; }
-    details.context[open] > summary { border-bottom: 1px solid var(--border); }
-    details.context .context-body { padding: 18px 24px 4px; }
-    details.context p { font-size: 15px; }
-
     /* Preview af det færdige værktøj */
     figure.preview {
       margin: 32px 0 0;
@@ -434,14 +411,6 @@
         <li><b>Mere data, og dine egne spørgsmål.</b> Den åbne opgave, som du løser solo.</li>
       </ol>
     </div>
-
-    <details class="context">
-      <summary>Baggrund: hvorfor lige denne opgave</summary>
-      <div class="context-body">
-        <p>PKA's team for investeringsomkostninger modtager kvartalsvise forvaltningshonorarer fra eksterne kapitalforvaltere og skal afstemme dem mod egen bogføring. Det ene datasæt er transaktionelt (bogføringen), det andet skal du <em>lede efter</em> i et dokument (fakturaen).</p>
-        <p>Claude kan bygge et selvstændigt artifact direkte i samtalen. Undervejs møder du <strong>Projects</strong>, <strong>Artifacts</strong> og iterativ udbygning. Til sidst står du med et lille værktøj, I selv kan style, teste og udvide.</p>
-      </div>
-    </details>
 
     <!-- ───────────────────────── FASE 1 ───────────────────────── -->
     <section class="phase">
