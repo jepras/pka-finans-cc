@@ -593,12 +593,26 @@ Læg et mindre antal fejl ind: et par manglende bogføringer, nogle beløb der a
 
 Brug semikolon som separator og dansk talformat, så filerne ligner dem, jeg allerede har.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="action">Hent de to filer, og læs et par rækker igennem, før du bruger dem. Ser tallene ud som noget, I kunne have modtaget?</div>
-        <div class="expect">To filer med 8 kvartaler, som du kan uploade i dit værktøj i stedet for det ene kvartal. Værktøjet skal formentlig udbygges lidt, før det kan håndtere flere perioder.</div>
+        <div class="expect">To CSV-filer med 8 kvartaler. De passer ikke ind i værktøjet endnu, og det retter du i næste trin.</div>
         <div class="insight"><strong>Læringen:</strong> Manglende testdata er sjældent en god grund til at lade være. Syntetisk data, der ligner det rigtige, er nok til at finde ud af om et værktøj er værd at bygge, og det kan ligge på en offentlig maskine uden at nogen får ondt i maven.</div>
       </div>
 
       <div class="step">
-        <span class="step-label">5.2 Byg noget, der giver indsigt</span>
+        <span class="step-label">5.2 Byg værktøjet om til det nye datasæt</span>
+        <p>Værktøjet er bygget til én PDF og ét kvartal. De nye filer er to CSV'er med otte kvartaler, så det skal udvides, før det kan bruges.</p>
+        <div class="prompt">Udbyg artifaktet, så det kan arbejde med det datasæt, du lige har lavet:
+
+1. Faktura-upload skal ud over PDF også kunne tage en CSV med fakturerede linjer. Vælg selv hvordan du skelner, og lad den eksisterende PDF-indlæsning blive ved med at virke.
+2. En afstemningslinje er nu ét mandat i én periode. Match på både mandat og periode, ikke kun mandat.
+3. Læg en periode-vælger i toppen, der filtrerer tabellen og KPI-kortene. Vis nyeste kvartal først.
+4. Afkrydsningen og eksporten skal følge den valgte periode, så jeg ikke blander kvartaler sammen.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Upload de to nye filer, og skift mellem et par kvartaler.</div>
+        <div class="expect">Otte kvartaler, du kan bladre imellem, hvor tallene skifter med perioden i stedet for at lægge sig oveni hinanden.</div>
+        <div class="insight"><strong>Læringen:</strong> Mere data er sjældent bare mere af det samme. Det ændrer, hvad en linje er. Her gik nøglen fra "mandat" til "mandat og periode", og det er den slags, der skal opdages tidligt, ikke når tallene allerede er rapporteret videre.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.3 Byg noget, der giver indsigt</span>
         <p>Herfra er der ingen færdige prompts. Vælg det spørgsmål, du selv ville stille, hvis tallene lå på dit bord, og bed Claude bygge det ind i værktøjet. Nogle retninger, der er værd at forfølge:</p>
         <ul>
           <li><strong>Den effektive honorarsats over tid.</strong> Regn faktisk betalt honorar om til bps af AUM pr. mandat pr. kvartal. Så kan du se, om en stigning skyldes at porteføljen er vokset, eller at satsen er kravlet.</li>
