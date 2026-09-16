@@ -201,6 +201,7 @@
       position: relative;
       margin: 14px 0;
       padding: 14px 124px 14px 16px;
+      min-height: 46px;
       border: 1px solid var(--border);
       border-radius: 7px;
       background: #1f1b1f;
@@ -254,19 +255,6 @@
       box-shadow: none;
       transform: rotate(42deg) translate(-1px, -1px);
     }
-    .prompt::before {
-      content: "Prompt";
-      display: inline-block;
-      margin: -2px 8px 4px -2px;
-      padding: 1px 7px;
-      border-radius: 4px;
-      background: rgba(206, 0, 96, .3);
-      color: #f5d6e3;
-      font-size: 10.5px;
-      letter-spacing: .01em;
-      font-weight: 700;
-      vertical-align: top;
-    }
 
     /* Long prompt: collapsed by default so the page stays readable */
     details.prompt-fold {
@@ -289,7 +277,6 @@
     details.prompt-fold[open] > summary::before { content: "▾ "; }
     details.prompt-fold[open] > summary { border-bottom: 1px solid var(--border); }
     details.prompt-fold .prompt { margin: 0; border: 0; border-radius: 0; }
-    details.prompt-fold .prompt::before { content: "Prompt. Indsæt hele blokken"; }
 
     /* Action callout (do this in the UI) */
     .action {
@@ -395,23 +382,22 @@
   <main>
     <div class="eyebrow">Session 2 · Claude Code · Guidet opgave</div>
     <h1>Byg en app, der svarer på spørgsmål til jeres omkostningstal, og som viser hvordan den kom frem til svaret</h1>
-    <p class="lead">Du bygger en lille webapp i en mappe. Den viser PKA A/S' omkostningsbase 2025 som et dashboard, og den lader dig stille spørgsmål på dansk: "hvad brugte vi på licenser i Q4, pr. kreditor?" Claude oversætter til SQL, appen kører SQL'en og viser fire ting side om side: SQL'en, en forklaring på almindeligt dansk af hvad den gør, resultattabellen og en graf. Du bygger den ikke i én prompt. Du bygger den lag for lag, og du kontrollerer undervejs.</p>
+    <p class="lead">Du bygger en lille webapp i en mappe. Den viser PKA A/S' omkostningsbase 2025 som et dashboard, og den lader dig stille spørgsmål på dansk: "hvad brugte vi på licenser i Q4, pr. kreditor?" Appen viser SQL'en, en forklaring på almindeligt dansk af hvad den gør, resultatet som tabel og en graf. Du skriver ikke kode. Du beskriver, hvad du vil have, og Claude Code bygger det, én feature ad gangen.</p>
 
     <figure class="preview">
-      <img src="vaerktoej-preview.png" alt="Skærmbillede af den færdige app med fire KPI-kort, en stablet søjlegraf pr. kvartal, en kreditortabel og et spørg-panel, hvor SQL, forklaring, resultattabel og graf står side om side." loading="lazy">
-      <figcaption>Sådan så resultatet ud, da vi selv kørte alle prompts igennem. Dit kommer til at se lidt anderledes ud, og det er meningen.</figcaption>
+      <img src="vaerktoej-preview.png" alt="Skærmbillede af den færdige app med nøgletal, en graf pr. kvartal, en kreditortabel og et spørg-panel, hvor SQL, forklaring, resultattabel og graf vises." loading="lazy">
+      <figcaption>Sådan så resultatet ud, da vi selv kørte prompterne igennem. Dit kommer til at se anderledes ud, og det er meningen. Claude træffer sine egne valg, når du ikke træffer dem for den.</figcaption>
     </figure>
 
     <div class="toc">
-      <h3>De syv faser</h3>
+      <h3>De seks faser</h3>
       <ol>
-        <li><b>Åbn mappen og få Bun på plads.</b> Én prompt, Claude installerer selv.</li>
-        <li><b>Planlæg og byg skelettet.</b> Plan mode, godkend, dashboard på skærmen.</li>
-        <li><b>Spørg-panelet.</b> SQL, forklaring og tabel, side om side.</li>
-        <li><b>Grafen.</b> Én lille prompt, ét nyt lag.</li>
-        <li><b>Kontrollen.</b> Den fejler, og I finder ud af hvorfor.</li>
-        <li><b>Filen i mappen.</b> Gem svaret som rapport, og slå Claude til.</li>
-        <li><b>Solo.</b> To fælder mere, og jeres egne spørgsmål.</li>
+        <li><b>Åbn mappen i Claude Desktop.</b> Og få Bun på plads med én prompt.</li>
+        <li><b>Startprompten.</b> Hvad du vil bygge, og de tekniske valg. Dashboardet står.</li>
+        <li><b>Spørg-panelet.</b> Spørgsmål på dansk, svar med SQL, forklaring, tabel og graf.</li>
+        <li><b>Filen i mappen.</b> Gem svaret som rapport.</li>
+        <li><b>Slå Claude til.</b> Nøglen ind, og frie spørgsmål.</li>
+        <li><b>Byg videre.</b> Idéer til det næste, I selv vil have.</li>
       </ol>
     </div>
 
@@ -419,79 +405,60 @@
       <summary>Baggrund: hvorfor lige denne opgave</summary>
       <div class="context-body">
         <p>Økonomiopfølgning starter næsten altid med et udtræk fra Finanskuben og et spørgsmål: hvad brugte vi på det her, hvem fik pengene, og hvordan har det udviklet sig? I dag er vejen fra spørgsmål til svar et Excel-ark, en pivot og en del håndarbejde. Den her app gør vejen kortere, men den gør noget vigtigere: den viser <em>hvordan</em> den kom frem til svaret, så du kan vurdere det, uanset om du kan læse SQL eller ikke.</p>
-        <p>Data er syntetisk. Konti, kreditorer og beløb er opdigtede, men formen er den samme som et rigtigt udtræk, og der er lagt tre fejl ind, som et rigtigt udtræk også kunne have. Én af dem finder I i fase 5. De to andre er jeres i fase 7.</p>
-        <p>Undervejs bruger I det, der blev vist på slides før øvelsen: mappen som Claudes verden, plan mode, tilladelser, og en kontrol der kan fejle. Alt ender som filer i mappen. Ikke et svar i et chatvindue.</p>
+        <p>Data er syntetisk. Konti, kreditorer og beløb er opdigtede, men formen er den samme som et rigtigt udtræk fra Finanskuben: transaktioner, kontoplan, kreditorer, omkostningssteder og en fordelingsnøgle.</p>
+        <p>Det eneste, der ligger i mappen, når du starter, er data og en beskrivelse af dem. Resten bygger Claude Code ud fra det, du skriver. Alt ender som filer i mappen. Ikke et svar i et chatvindue.</p>
       </div>
     </details>
 
     <!-- ───────────────────────── FASE 1 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">1</div>
-      <h2>Åbn mappen og få Bun på plads</h2>
-      <p>Appen kører på Bun, en lille JavaScript-runtime, der også er bundler og pakkehåndtering i ét. Den skal installeres én gang. Det behøver du ikke gøre selv, det kan Claude Code.</p>
+      <h2>Åbn mappen i Claude Code</h2>
+      <p>Mappen er Claudes verden. Alt hvad den ved om opgaven, står i de filer, der ligger i den mappe, du åbner. Så det første valg er, hvilken mappe.</p>
 
       <div class="step">
-        <span class="step-label">1.1 Find mappen</span>
-        <div class="action">Åbn det materiale, du pakkede ud, og find <code>session2-code/spoerg-dine-tal/</code>. Det er den mappe, Claude Code skal arbejde i. Ikke roden af materialet, og ikke <code>FACIT/</code>.</div>
+        <span class="step-label">1.1 Åbn Claude Desktop og vælg mappen</span>
+        <div class="action">Åbn <b>Claude Desktop</b>-appen, og gå over på fanen <b>Code</b>. Vælg <b>Open folder</b>, og peg på mappen <code>session2-code</code> i det materiale, du pakkede ud. Ikke roden af materialet, og ikke <code>session2-facit</code>.</div>
+        <div class="action">Start en ny samtale. Vælg tilladelsen <b>Auto</b>, hvis den er tilgængelig. Hvis ikke, så vælg <b>Accept edits</b>. Så må Claude lave og rette filer uden at spørge hver gang. Med Accept edits spørger den stadig, før den kører kommandoer.</div>
         <div class="materials">
-          <h3>Det, der allerede ligger i mappen</h3>
+          <h3>Det, der ligger i mappen</h3>
           <ul>
-            <li><code>CLAUDE.md</code> <span class="kind">· regler og stack, som Claude læser automatisk</span></li>
             <li><code>data/finanskube-2025.sqlite</code> <span class="kind">· udtrækket, ca. 3.300 transaktioner</span></li>
             <li><code>data/DATAMODEL.md</code> <span class="kind">· tabeller og kolonner forklaret</span></li>
-            <li><code>kontroller/</code> og <code>scripts/kontrol.ts</code> <span class="kind">· fem gyldne spørgsmål med kendte svar</span></li>
-            <li><code>server/mock.ts</code> og <code>server/provider.ts</code> <span class="kind">· svar uden API-nøgle, og skiftet til Claude med nøgle</span></li>
-            <li><code>components/ui/</code> <span class="kind">· fem færdige shadcn-komponenter</span></li>
+            <li><code>session2-guidet-opgave.html</code> <span class="kind">· den her side</span></li>
           </ul>
         </div>
-        <p class="muted">Det, der ikke ligger der, er selve appen. Ingen server, ingen side, intet dashboard. Det er det, I bygger.</p>
         <div class="hint">Mangler du materialet, så hent <a href="https://github.com/jepras/pka-finans-cc/archive/refs/heads/main.zip">zip-filen med hele workshopmaterialet</a> og pak den ud, før du går videre.</div>
       </div>
 
       <div class="step">
-        <span class="step-label">1.2 Åbn Claude Code i mappen</span>
-        <div class="action">Åbn Claude Code-appen. Vælg <b>Open folder</b> og peg på <code>spoerg-dine-tal/</code>. Start en ny samtale.</div>
-        <div class="action">Tilladelser: vælg <b>Accept edits</b>. Claude må rette filer uden at spørge hver gang, men spørger stadig før den kører kommandoer.</div>
-      </div>
-
-      <div class="step">
-        <span class="step-label">1.3 Første prompt: installer og kig rundt</span>
-        <div class="prompt">Tjek om Bun er installeret ved at køre bun --version. Hvis den mangler, så installer den. På Windows: powershell -c "irm bun.sh/install.ps1 | iex". På Mac: curl -fsSL https://bun.sh/install | bash. Kør derefter bun install i denne mappe. Læs så CLAUDE.md og data/DATAMODEL.md, og fortæl mig med højst fem linjer hvad der ligger i mappen, og hvad der mangler, før appen kan køre. Byg ikke noget endnu.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="action">Claude beder om lov til at køre kommandoerne. Sig ja til hver enkelt. Læs hvad den vil køre, før du siger ja.</div>
-        <div class="expect">Fem linjer. Claude kan se databasen, datamodellen, kontrollerne og komponenterne, og den siger at server, side og dashboard mangler. Den har ikke skrevet en eneste fil.</div>
-        <div class="insight"><strong>Læringen:</strong> Mappen er Claudes verden. Alt hvad den ved om opgaven, står i filerne i mappen, og CLAUDE.md er den fil, den læser først. Jo bedre den er, jo mindre skal du forklare i hver prompt.</div>
+        <span class="step-label">1.2 Første prompt: Bun og et kig i mappen</span>
+        <p>Appen kommer til at køre på Bun, en lille JavaScript-runtime. Det er en engangsinstallation, og hvad Bun egentlig er, er ligegyldigt, hvis du ikke er udvikler. Det skal bare lige virke, og det kan Claude sørge for.</p>
+        <div class="prompt">Tjek om Bun er installeret ved at køre bun --version. Hvis den mangler, så installer den med: powershell -c "irm bun.sh/install.ps1 | iex". Kig så i mappen, og fortæl mig kort hvad der ligger her. Byg ikke noget endnu.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Claude beder om lov til at køre kommandoerne. Læs hvad den vil køre, og sig ja.</div>
+        <div class="expect">Et kort overblik: en database med transaktioner, kontoplan, kreditorer, omkostningssteder og fordelingsnøgle, og en beskrivelse af dem. Ingen kode endnu.</div>
+        <div class="insight"><strong>Læringen:</strong> Claude læste datamodellen, før du bad den om noget. Det er den, der gør, at du i næste fase kan skrive "de vigtigste nøgletal" og få noget fornuftigt, uden at forklare hvad en kontogruppe er.</div>
       </div>
     </section>
 
     <!-- ───────────────────────── FASE 2 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">2</div>
-      <h2>Planlæg og byg skelettet</h2>
-      <p>Nu skal appen have en krop: en server, en side og et dashboard med de tal, alle kender. Ikke spørg-panelet endnu. Det kommer i næste fase, og det er med vilje: ét lag ad gangen er lettere at kontrollere end det hele på én gang.</p>
+      <h2>Startprompten</h2>
+      <p>Den vigtigste prompt i hele øvelsen. Den består af to dele: <em>hvad</em> du vil bygge, i almindeligt sprog, og <em>de tekniske valg</em>, du vil have Claude til at bruge. Den første del er din. Den anden del har vi skrevet for dig, så I kommer godt fra start.</p>
 
       <div class="step">
-        <span class="step-label">2.1 Skift til plan mode</span>
-        <div class="action">Tryk <b>Shift+Tab</b> indtil der står <b>plan mode</b> nederst. I plan mode ændrer Claude ingen filer. Den læser, tænker og skriver en plan, som du godkender først.</div>
-      </div>
-
-      <div class="step">
-        <span class="step-label">2.2 Bed om planen</span>
+        <span class="step-label">2.1 Indsæt startprompten</span>
         <details class="prompt-fold">
-          <summary>Vis planprompten, indsæt hele blokken</summary>
-          <div class="prompt">Lav en plan for skelettet til appen, som beskrevet i CLAUDE.md. Skelettet skal bestå af: server.ts med Bun.serve, der serverer index.html og har endpointet GET /api/dashboard. server/db.ts, der åbner databasen read-only, kører data/rettelser.sql og eksporterer en query-funktion. index.html og app.tsx med en header (titel, undertitel og en badge der viser om appen kører som Mock eller Claude, hentet fra tilstand i server/provider.ts) og et Dashboard med fire KPI-kort: samlede omkostninger 2025, antal bilag, største kontogruppe, og andel af omkostningsbasen der ligger på formueforvaltning. Under kortene en stablet søjlegraf med kontogruppe pr. kvartal, og en tabel med de ti største kreditorer. Ikke spørg-panelet endnu. Skriv i planen, hvordan jeg selv kan kontrollere, at de fire KPI-tal er rigtige.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        </details>
-        <div class="expect">En plan med de filer, der skal laves, og et afsnit om kontrol: hvilke tal du skal forvente på de fire kort, og hvordan du selv kan slå dem op. Planen tager typisk 3 til 5 minutter. Læs den, mens den skrives.</div>
-        <div class="hint">Mangler kontrolafsnittet, eller er det tyndt, så skriv: "Planen mangler en måde, jeg selv kan tjekke KPI-tallene. Tilføj det." Det er hele pointen med plan mode, at du retter planen, ikke koden.</div>
-      </div>
+          <summary>Vis startprompten, indsæt hele blokken</summary>
+          <div class="prompt">Jeg vil bygge en lille webapp, der viser PKA A/S omkostningsbase for 2025 som et dashboard, og som senere skal kunne svare på spørgsmål til tallene på dansk. Data ligger i data/finanskube-2025.sqlite og er beskrevet i data/DATAMODEL.md. Læs den først. Dashboardet skal vise de vigtigste nøgletal øverst, en graf over kontogrupper pr. kvartal og en tabel med de største kreditorer. Start med dashboardet, spørgefunktionen kommer bagefter.
 
-      <div class="step">
-        <span class="step-label">2.3 Godkend og byg</span>
-        <div class="prompt">Planen er godkendt. Byg skelettet.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="action">Når Claude er færdig, så bed den starte appen:</div>
-        <div class="prompt">Start appen med bun run dev i baggrunden, og fortæl mig adressen.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="action">Åbn <code>http://localhost:3000</code> i en browser.</div>
-        <div class="expect">Et dashboard med fire KPI-kort, en stablet søjlegraf pr. kvartal og en tabel med ti kreditorer. Badgen i headeren siger <b>Mock</b>. Hold tallene på kortene op mod dem, planen lovede.</div>
-        <div class="insight"><strong>Læringen:</strong> Planen er kontrakten. Da Claude skrev "302.287.300 kr." i planen, før den skrev en linje kode, fik du noget at holde koden op imod. Uden planen havde du kun kunnet sige "det ser rigtigt ud".</div>
+Tekniske valg: Bun som runtime og bundler, med Bun.serve og en index.html, ingen Vite og ingen Next.js. React og TypeScript. Tailwind med komponenter i shadcn-stil. bun:sqlite til databasen, kun læsning. Recharts til grafer. Alt på dansk med dansk talformat. Farver: PKA-rød #92004D som primær, bordeaux #660036 til overskrifter, rubinrød #CE0060 til aktive elementer, og til grafer #6E9BAA, #9EDFCE, #C5AED5, #EFC47C, #E88F80 og #85B499. Ingen emojis. Skriv en CLAUDE.md med de valg, så du husker dem fremover. Kør bun install, start appen og giv mig adressen.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        </details>
+        <div class="action">Sig ja, når Claude beder om lov til at køre kommandoer. Det tager 4 til 6 minutter. Følg med i, hvilke filer den laver.</div>
+        <div class="expect">Claude skriver en håndfuld filer, en <code>CLAUDE.md</code> med de tekniske valg, og starter appen. Åbn <code>http://localhost:3000</code> i en browser: nøgletal øverst, en graf pr. kvartal og en tabel med kreditorer.</div>
+        <div class="hint">Starter appen ikke af sig selv, så skriv: "Start appen og giv mig adressen." Fejler noget, så indsæt fejlteksten og skriv: "Ret det." Det er sådan, det foregår.</div>
+        <div class="insight"><strong>Læringen:</strong> De tekniske valg fylder fire linjer og afgør alt om, hvor godt de næste prompts går. Uden dem vælger Claude selv, og det er ikke sikkert, den vælger det samme to gange. Med dem, og med CLAUDE.md, behøver du aldrig nævne teknik igen.</div>
       </div>
     </section>
 
@@ -499,130 +466,87 @@
     <section class="phase">
       <div class="phase-num">3</div>
       <h2>Spørg-panelet</h2>
-      <p>Dashboardet svarer på de spørgsmål, nogen har besluttet på forhånd. Nu tilføjer vi det, der svarer på dine. Og vigtigst: det skal vise, hvordan det kom frem til svaret.</p>
+      <p>Dashboardet svarer på de spørgsmål, nogen har besluttet på forhånd. Nu tilføjer vi det, der svarer på dine. Bemærk, at prompten beskriver, hvad du vil have, ikke hvordan det skal laves.</p>
 
       <div class="step">
-        <span class="step-label">3.1 Byg panelet</span>
-        <p>Skift tilbage til <b>Accept edits</b> med Shift+Tab. Bliv i samme samtale.</p>
+        <span class="step-label">3.1 Bed om panelet</span>
         <details class="prompt-fold">
-          <summary>Vis byggeprompten, indsæt hele blokken</summary>
-          <div class="prompt">Byg spørg-panelet under dashboardet. Et tekstfelt hvor jeg skriver et spørgsmål på dansk og en knap "Spørg". Serveren får endpointet POST /api/ask, der kalder spoerg() fra server/provider.ts, afviser SQL der ikke består erLaesning(), kører SQL'en gennem server/db.ts og returnerer titel, sql, forklaring, graftype og rækkerne. I panelet vises svaret i to kolonner: til venstre SQL'en i en kodeblok med kopiknap og under den forklaringen med overskriften "Hvad gør den". Til højre resultattabellen med dansk talformat. Ingen graf endnu. Vis en fejlbesked pænt, hvis SQL'en afvises eller fejler.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+          <summary>Vis prompten, indsæt hele blokken</summary>
+          <div class="prompt">Appen kører fint. Tilføj nu et spørg-panel under dashboardet. Jeg skriver et spørgsmål på dansk, for eksempel "hvad brugte vi på licenser i Q4, pr. kreditor?", og appen viser fire ting: den SQL der blev brugt, en forklaring på almindeligt dansk af hvad SQL'en gør og hvad den ikke tager højde for, resultatet som en tabel, og en graf når det giver mening. Brug Vercel AI SDK med Claude (modellen claude-sonnet-5), når der ligger en ANTHROPIC_API_KEY i .env. Uden nøgle skal appen svare fra et fast sæt eksempelsvar, så jeg kan prøve den med det samme. Vis øverst om den kører med Claude eller med eksempelsvar. Kun læsende SQL må køres.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         </details>
-        <div class="expect">Appen genindlæser selv. Under dashboardet står et tekstfelt og en Spørg-knap.</div>
+        <div class="expect">Appen genindlæser selv. Under dashboardet står et tekstfelt, nogle eksempelspørgsmål og en Spørg-knap. Øverst i panelet står der, at den kører med eksempelsvar.</div>
       </div>
 
       <div class="step">
-        <span class="step-label">3.2 Stil tre spørgsmål</span>
-        <div class="action">Skriv dem i appen, ét ad gangen. Læs forklaringen <em>før</em> du kigger på tabellen.</div>
-        <div class="prompt">Hvad brugte vi på licenser i Q4, pr. kreditor?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="prompt">Hvordan udvikler personaleomkostninger sig pr. måned?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="prompt">Hvem er vores fem største eksterne rådgivere?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Til venstre SQL og forklaring, til højre en tabel. På licensspørgsmålet står den samme leverandør to gange med lidt forskelligt navn. Forklaringen siger selv, at den ikke slår dem sammen. Det er ikke en fejl i appen, det er en fejl i udtrækket, og appen fortæller dig det.</div>
-        <div class="insight"><strong>Læringen:</strong> SQL'en er beviset for dem, der kan læse den. Forklaringen er beviset for alle andre. Ingen af delene kræver, at du stoler på Claude. Du kan se, hvad den gjorde, og hvad den ikke tog højde for.</div>
-        <div class="hint">Appen kører uden API-nøgle lige nu, så den svarer kun på et fast sæt spørgsmål. Stiller du et andet, siger den det pænt. Nøglen kommer i fase 6.</div>
+        <span class="step-label">3.2 Prøv den</span>
+        <div class="action">Klik på eksempelspørgsmålene, ét ad gangen. Læs forklaringen, <em>før</em> du kigger på tabellen.</div>
+        <div class="expect">SQL'en, forklaringen, en tabel med rigtige tal fra databasen, og en graf. Forklaringen fortæller også, hvad forespørgslen ikke tager højde for, for eksempel at moms ikke er med.</div>
+        <div class="insight"><strong>Læringen:</strong> SQL'en er beviset for dem, der kan læse den. Forklaringen er beviset for alle andre. Ingen af delene kræver, at du stoler på Claude. Du kan se, hvad den gjorde, og hvad den ikke gjorde.</div>
+        <div class="hint">Appen svarer fra et fast sæt lige nu, så den kender kun eksempelspørgsmålene. Frie spørgsmål kommer i fase 5.</div>
       </div>
     </section>
 
     <!-- ───────────────────────── FASE 4 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">4</div>
-      <h2>Grafen</h2>
-      <p>Én lille prompt, ét nyt lag. Bemærk hvor lidt du skal skrive, når resten allerede står i mappen.</p>
+      <h2>Filen i mappen</h2>
+      <p>Et svar i et vindue forsvinder. Et svar i en fil kan sendes, vedlægges og findes igen. Én kort prompt.</p>
 
       <div class="step">
-        <span class="step-label">4.1 Tilføj grafen</span>
-        <div class="prompt">Tilføj en graf under resultattabellen ud fra graftype: soejle giver et søjlediagram med første tekstkolonne som kategori og første talkolonne som værdi, linje giver et linjediagram med samme regel, ingen giver ingen graf. Brug Recharts og sekundærfarverne fra styles.css. Grafen skal have dansk talformat på aksen og i tooltip.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="action">Stil personalespørgsmålet igen. Det skal give en linje. Stil licensspørgsmålet igen. Det skal give søjler.</div>
-        <div class="expect">En graf under tabellen, med danske tal på aksen. Modellen har valgt graftypen, ikke du.</div>
-        <div class="insight"><strong>Læringen:</strong> Små prompts, små ændringer, hurtig kontrol. Det er ikke langsommere end én stor prompt. Det er hurtigere, fordi du fanger fejl, mens de er små.</div>
+        <span class="step-label">4.1 Gem som rapport</span>
+        <div class="prompt">Det virker. Tilføj en knap "Gem som rapport" ved svaret. Den skal gemme svaret som en fil i mappen rapporter/ med spørgsmålet, forklaringen, SQL og resultatet, så jeg kan sende det til en kollega. Vis filnavnet, når det er gemt.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Stil et spørgsmål, klik <b>Gem som rapport</b>, og åbn mappen <code>rapporter/</code> i <code>session2-code</code>.</div>
+        <div class="expect">En fil med dagens dato og spørgsmålet i navnet. Åbn den: spørgsmål, forklaring, SQL og tabel, klar til at sende videre.</div>
+        <div class="insight"><strong>Læringen:</strong> Du sagde ikke, hvilket filformat, hvordan filnavnet skulle dannes, eller hvad der sker, hvis du gemmer to gange. Claude valgte. Er du ikke tilfreds med et valg, siger du det, ligesom til en kollega.</div>
       </div>
     </section>
 
     <!-- ───────────────────────── FASE 5 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">5</div>
-      <h2>Kontrollen</h2>
-      <p>Alt ser rigtigt ud. Tallene står pænt på kortene, og graferne er flotte. Nu kører vi kontrollen, og så ser vi.</p>
+      <h2>Slå Claude til</h2>
+      <p>Indtil nu har appen svaret fra et fast sæt. Nu får den en rigtig model bag sig. Underviseren viser et link på skærmen. Bag det ligger én linje tekst.</p>
 
       <div class="step">
-        <span class="step-label">5.1 Kør kontrollen og find årsagen</span>
-        <div class="prompt">Kør bun run kontrol. To kontroller fejler. Find ud af, præcis hvilke posteringer der gør, at totalen for 2025 afviger fra kontroltotalen, og hvorfor. Foreslå en rettelse, men ret ikke noget, før jeg har godkendt den. Rettelsen skal laves som et view i data/rettelser.sql, ikke som en sletning, og den skal beskrives i data/RETTELSER.md med bilagsnumre, beløb og begrundelse.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Kontrollen viser to røde linjer: totalen afviger 48.000 kr. fra Finanskubens kontroltotal, og der er én dublet. Claude finder to bilag i oktober med samme dato, konto, kreditor, beløb og tekst, og foreslår et view, der beholder det første. Den har ikke ændret noget endnu.</div>
-        <div class="hint">Kontrol 4 fejler også, men står som "solo-opgave". Den lader I ligge til fase 7.</div>
-      </div>
-
-      <div class="step">
-        <span class="step-label">5.2 Godkend rettelsen, og kør igen</span>
-        <div class="action">Læs forslaget. Er det en view og et notat, ikke en sletning? Nævner det bilagsnumrene? Så godkend:</div>
-        <div class="prompt">Godkendt. Skriv begge filer, og kør bun run kontrol igen.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="expect">Kontrol 1, 2, 3 og 5 er grønne. Totalen på dashboardet er faldet med 48.000 kr., og antal bilag med ét. Databasen er ikke ændret. Rettelsen ligger som en view i <code>data/rettelser.sql</code>, og begrundelsen i <code>data/RETTELSER.md</code>.</div>
-        <div class="insight"><strong>Læringen:</strong> Det pæne tal og det rigtige tal var ikke det samme, og det var kontrollen, der afgjorde forskellen, ikke øjemål. En kontrol, der kan fejle, er det, der gør resten troværdigt. Og rettelsen kan læses af en revisor, fordi den er en fil, ikke et klik.</div>
+        <span class="step-label">5.1 Læg nøglen i mappen</span>
+        <div class="action">Åbn linket, indtast adgangskoden underviseren siger, og kopiér linjen. Skriv så til Claude, og indsæt linjen efter kolon:</div>
+        <div class="prompt">Opret filen .env i mappen med denne linje, sørg for at den ikke kommer med i git, og genstart appen:<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Genindlæs browseren.</div>
+        <div class="expect">Panelet siger nu, at det kører med Claude. Stil et spørgsmål, der ikke var med i eksemplerne: "Hvilke omkostningssteder bruger mest på eksterne rådgivere, og hvor stor en andel er det af deres samlede omkostninger?"</div>
+        <div class="insight"><strong>Læringen:</strong> Nøglen kom aldrig i materialet og aldrig i et screenshot. Den ligger i én fil på din maskine, og den bliver slettet efter workshoppen. Private data, indhold udefra og en vej ud må ikke mødes, uden at nogen har taget stilling. Det har I lige gjort.</div>
       </div>
     </section>
 
     <!-- ───────────────────────── FASE 6 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">6</div>
-      <h2>Filen i mappen, og Claude i appen</h2>
-      <p>Et svar i et vindue forsvinder. Et svar i en fil kan sendes, vedlægges og findes igen. Og så skal appen have en rigtig model bag sig.</p>
-
-      <div class="step">
-        <span class="step-label">6.1 Gem som rapport</span>
-        <div class="prompt">Tilføj knappen "Gem som rapport" over resultattabellen. Når jeg klikker, skal serveren gemme to filer i rapporter/: en .sql med forespørgslen og en .md med spørgsmålet, titlen, forklaringen, dato og resultattabellen som markdown-tabel. Filnavnet er dagens dato og en kort slug af titlen. Vis filnavnene i panelet, når det er gemt.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="action">Stil licensspørgsmålet, klik <b>Gem som rapport</b>, og åbn <code>rapporter/</code> i mappen.</div>
-        <div class="expect">To filer med dagens dato i navnet. Åbn .md-filen: spørgsmål, forklaring, SQL og tabel, klar til at sende videre.</div>
-      </div>
-
-      <div class="step">
-        <span class="step-label">6.2 Slå Claude til</span>
-        <p>Indtil nu har appen svaret fra et fast sæt svar. Underviseren viser nu et link på skærmen. Bag det ligger én linje tekst.</p>
-        <div class="action">Åbn linket, indtast adgangskoden underviseren siger, og kopiér linjen. Lav en fil i mappen, der hedder <code>.env</code>, indsæt linjen, og gem. Du kan også bede Claude om det: "Opret .env med denne linje", og indsæt linjen.</div>
-        <div class="action">Genstart appen: bed Claude om at stoppe og starte <code>bun run dev</code> igen. Genindlæs browseren.</div>
-        <div class="expect">Badgen i headeren siger nu <b>Claude</b>. Stil et spørgsmål, der ikke var med i det faste sæt: "Hvilke omkostningssteder bruger mest på eksterne rådgivere, og hvor stor en andel er det af deres samlede omkostninger?"</div>
-        <div class="insight"><strong>Læringen:</strong> Nøglen kom aldrig i materialet, aldrig i en chat og aldrig i et screenshot. Den ligger i én fil på din maskine, som git ignorerer, og den bliver slettet efter workshoppen. Det er trifecta-sliden i praksis: private data, indhold udefra og en vej ud må ikke mødes uden at nogen har taget stilling.</div>
-      </div>
-    </section>
-
-    <!-- ───────────────────────── FASE 7 ───────────────────────── -->
-    <section class="phase">
-      <div class="phase-num">7</div>
-      <h2>Solo: to fælder mere, og jeres egne spørgsmål</h2>
-      <p>Herfra er der ingen færdige prompts. Udtrækket har stadig to fejl, og appen kan meget mere end den gør.</p>
+      <h2>Byg videre</h2>
+      <p>Herfra er der ingen færdige prompts. I har set formen: beskriv hvad du vil have, i almindeligt sprog, og se det ske. Nogle retninger, der er værd at forfølge:</p>
 
       <div class="mission">
-        <span class="label">Opgave</span>
-        <h3>Find de to sidste fejl, og byg det, I selv mangler</h3>
-        <p>Kontrol 4 fejler stadig. Og på licensspørgsmålet stod samme leverandør to gange. Begge dele kan rettes på samme måde som i fase 5: en view, et notat, en kontrol der bliver grøn.</p>
+        <span class="label">Idéer</span>
+        <h3>Det næste, I selv vil have</h3>
+        <ul>
+          <li><strong>Budget mod realiseret.</strong> Bed Claude lave et budget pr. kontogruppe pr. kvartal, og vis afvigelsen på dashboardet.</li>
+          <li><strong>Udvikling over tid.</strong> Hvilke kreditorer er vokset mest fra Q1 til Q4? Hvilke konti stiger måned for måned?</li>
+          <li><strong>Fordelingen.</strong> Vis omkostningsbasen fordelt på formueforvaltning og medlemsadministration pr. kontogruppe, ikke kun i alt.</li>
+          <li><strong>Gemte spørgsmål.</strong> Lad appen huske de spørgsmål, I stiller ofte, som knapper, så de kan køres igen med ét klik næste kvartal.</li>
+          <li><strong>Eksport til Excel.</strong> En knap, der lægger resultattabellen i en fil, kollegaen kan åbne direkte.</li>
+          <li><strong>Jeres egne kolonner.</strong> Læg et ufølsomt udtræk i <code>data/</code>, og bed Claude importere det i databasen. Så virker resten af appen på jeres tal.</li>
+          <li><strong>Opfølgning på et svar.</strong> Lad brugeren stille et opfølgende spørgsmål til det svar, der står på skærmen: "og kun for Q4?"</li>
+        </ul>
       </div>
 
       <div class="step" style="margin-top: 22px;">
-        <span class="step-label">7.1 Fordelingen der ikke rammer hele basen</span>
-        <p>Kontrol 4 siger, at fordelingen på formueforvaltning og medlemsadministration kun dækker knap 90 procent af omkostningsbasen. Resten forsvinder i stilhed. Bed Claude finde ud af hvilket omkostningssted der mangler i fordelingsnøglen, og hvad der skal til, for at kontrollen består. Beslut selv, om det er en rettelse i data eller en advarsel i appen, og få begrundelsen ned i <code>data/RETTELSER.md</code>.</p>
-      </div>
-
-      <div class="step">
-        <span class="step-label">7.2 Kreditoren med to navne</span>
-        <p>Én softwareleverandør er oprettet to gange med lidt forskelligt navn. Bed Claude finde alle kreditorer, der ligner hinanden, og foreslå en view, der slår dem sammen. Overvej: skal appen bruge den view som standard, eller skal den vise begge og advare?</p>
-      </div>
-
-      <div class="step">
-        <span class="step-label">7.3 Jeres egne spørgsmål og jeres egne data</span>
-        <p>Nogle retninger:</p>
-        <ul>
-          <li><strong>Budget mod realiseret.</strong> Bed Claude generere en budgettabel pr. kontogruppe pr. kvartal, og få appen til at vise afvigelsen.</li>
-          <li><strong>Fejlkonteringer.</strong> Hvilke posteringer ligger på en konto, deres kreditor normalt ikke rammer? Det er det, PC 5 kalder "hurtigt at identificere fejlkonteringer".</li>
-          <li><strong>Gemte spørgsmål som kontrol.</strong> Tag en rapport fra <code>rapporter/</code> og gør den til en gylden kontrol i <code>kontroller/</code>, så den kører hver gang.</li>
-          <li><strong>Jeres egen CSV.</strong> Læg et udtræk med ufølsomme tal i <code>data/</code>, og bed Claude importere det i databasen med et lille script. Så virker resten af appen på jeres kolonner.</li>
-        </ul>
         <div class="hint">Formulér spørgsmålet, før du beder om featuren. "Vis mig hvilke kreditorer der er vokset mest fra Q1 til Q4" giver et svar. "Lav flere grafer" giver pynt.</div>
-        <div class="insight"><strong>Læringen:</strong> I har nu en mappe med en app, en datamodel, en kontrol og en logbog over rettelser. Det er ikke drift, det er en prototype. Men det er en prototype, hvor hvert tal kan spores tilbage til en SQL og en forklaring, og det er mere end de fleste Excel-ark kan sige.</div>
+        <div class="insight"><strong>Læringen:</strong> I har nu en mappe med en app, en datamodel, en CLAUDE.md med jeres valg og en mappe med rapporter. Det er ikke drift, det er en prototype. Men det er en prototype, hvor hvert tal kan spores tilbage til en SQL og en forklaring, og det er mere end de fleste Excel-ark kan sige.</div>
       </div>
     </section>
 
     <details class="context" style="margin-top: 60px;">
-      <summary>Hvis noget går galt: FACIT</summary>
+      <summary>Hvis noget går galt: det færdige eksempel</summary>
       <div class="context-body">
-        <p>I <code>session2-code/FACIT/</code> ligger den app, vi selv fik ud af at køre alle prompts igennem, inklusiv rettelsen fra fase 5 og en gemt rapport. Kør <code>bun install</code> og <code>bun run dev</code> i den mappe, hvis du vil se slutresultatet, eller kopiér en fil derfra, hvis din egen version er kørt fast. Den er et eksempel, ikke et facit i skolebetydningen. Din version må gerne være anderledes.</p>
+        <p>I <code>session2-facit/</code> ligger den app, vi selv fik ud af at køre prompterne igennem, inklusiv en gemt rapport. Kør <code>bun install</code> og <code>bun run dev</code> i den mappe, hvis du vil se slutresultatet, eller kopiér en fil derfra, hvis din egen version er kørt fast. Det er et eksempel, ikke et facit i skolebetydningen. Din version må gerne være anderledes.</p>
       </div>
     </details>
 

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  /* PKA-palette */
+  --color-pka-roed: #92004d;
+  --color-pka-bordeaux: #660036;
+  --color-pka-rubin: #ce0060;
+
+  /* Grafarver — én pr. kontogruppe, se src/lib/theme.ts */
+  --color-graf-1: #6e9baa;
+  --color-graf-2: #9edfce;
+  --color-graf-3: #c5aed5;
+  --color-graf-4: #efc47c;
+  --color-graf-5: #e88f80;
+  --color-graf-6: #85b499;
+
+  /* Flade i shadcn-stil */
+  --color-background: #f7f5f6;
+  --color-foreground: #241119;
+  --color-card: #ffffff;
+  --color-card-foreground: #241119;
+  --color-muted: #f1ecef;
+  --color-muted-foreground: #6b5a62;
+  --color-border: #e6dfe3;
+  --color-ring: #ce0060;
+
+  --radius-card: 0.75rem;
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  /* Tal justeres i kolonner — tabulære cifre overalt hvor vi viser beløb */
+  .tal {
+    font-variant-numeric: tabular-nums;
+  }
+}
