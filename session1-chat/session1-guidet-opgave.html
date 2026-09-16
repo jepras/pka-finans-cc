@@ -140,6 +140,25 @@
     details.context .context-body { padding: 18px 24px 4px; }
     details.context p { font-size: 15px; }
 
+    /* Preview af det færdige værktøj */
+    figure.preview {
+      margin: 32px 0 0;
+      padding: 0;
+    }
+    figure.preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 24px rgba(34, 19, 27, .1);
+    }
+    figure.preview figcaption {
+      margin-top: 10px;
+      color: var(--muted-foreground);
+      font-size: 13.5px;
+    }
+
     /* A phase = one big numbered section */
     .phase {
       position: relative;
@@ -399,6 +418,11 @@
     <div class="eyebrow">Session 1 · Claude Chat · Guidet opgave</div>
     <h1>Afstem en forvalterfaktura mod jeres egen bogføring, og byg selv værktøjet</h1>
     <p class="lead">Du bygger et afstemningsværktøj. Du lægger en forvalterfaktura og jeres bogføringsfil ind, og værktøjet stiller de to op mod hinanden linje for linje: hvad stemmer, hvad afviger, og hvad er slet ikke bogført. Hver linje kan krydses af undervejs, så du kan se hvor langt du er. Alt sammen bygget i Claude, uden en linje kode i forvejen.</p>
+
+    <figure class="preview">
+      <img src="vaerktoej-preview.png" alt="Skærmbillede af det færdige afstemningsværktøj med upload-felter, KPI-kort og en afstemningstabel, hvor hver linje har status match eller mangler bogføring." loading="lazy">
+      <figcaption>Sådan kan resultatet se ud. Dit kommer ikke til at se præcis sådan ud, og det er meningen. Du bygger det selv, og du bestemmer hvordan det skal virke.</figcaption>
+    </figure>
 
     <div class="toc">
       <h3>De fem faser</h3>

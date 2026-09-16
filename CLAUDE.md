@@ -26,7 +26,7 @@ Vores to timer ligger inde i et større todagesprogram:
 
 Efterfølgende samler Forca op på input og use cases, og hver afdeling laver sit eget roadmap.
 
-Vores materiale kombineres med slidedecket "Claude i praksis". **Se [SUPPLERENDE_MATERIALE.md](SUPPLERENDE_MATERIALE.md)** for slides, tidsplan og hvad der allerede er rammesat, før deltagerne åbner opgaverne her. Læs den fil, før du skriver eller ændrer opgaveindhold.
+Vores materiale kombineres med slidedecket "Claude i praksis". **Se `SKAL-SLETTES/SUPPLERENDE_MATERIALE.md`** (ligger uden for git, da det er interne noter) for slides, tidsplan og hvad der allerede er rammesat, før deltagerne åbner opgaverne her. Læs den fil, før du skriver eller ændrer opgaveindhold.
 
 ## Skrivestil
 
@@ -49,7 +49,7 @@ Denne mappe (`pka-finans-cc/`) er selve git-repoet:
 Mappestruktur:
 
 - `opgaver/`: opgavebeskrivelser (HTML)
-- `præsentation/`: slidedecks (HTML)
+- `presentation/`: slidedecks (HTML)
 - `session1-chat/`: materiale til session 1 (Claude chat)
 - `session2-code/`: materiale til session 2 (Claude Code)
 
