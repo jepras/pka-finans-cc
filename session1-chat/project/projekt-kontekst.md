@@ -16,7 +16,7 @@ Læg aldrig rigtige PKA-data, kundedata eller interne bilag ind i dette projekt.
 
 ## Materialet
 
-Datafilerne ligger i mappen `session1-chat/artifact-uploads/` og uploades direkte i det værktøj, du bygger. De skal ikke ligge i projektets Knowledge:
+Datafilerne ligger i mappen `session1-chat/artifact-uploads/` og uploades direkte i det værktøj, du bygger. De skal ikke ligge i Project-konteksten:
 
 | Fil | Indhold |
 | --- | --- |
