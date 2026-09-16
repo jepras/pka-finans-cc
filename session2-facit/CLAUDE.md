@@ -71,11 +71,25 @@ To tilstande, vist som mærkat øverst i panelet og logget ved opstart:
 
 | Tilstand | Hvornår | Hvad sker der |
 |---|---|---|
-| Claude | `ANTHROPIC_API_KEY` er sat i `.env` | Spørgsmålet oversættes til SQL af `claude-sonnet-5` via `generateObject` |
+| Claude | Der er sat en API-nøgle, fra `.env` ved opstart eller fra feltet i appen | Spørgsmålet oversættes til SQL af `claude-sonnet-5` via `generateObject` |
 | Eksempelsvar | Ingen nøgle | Spørgsmålet matches mod `src/eksempelsvar.ts` på nøgleord |
 
 I begge tilstande køres SQL'en rigtigt mod databasen — eksempelsvarene har håndskrevet SQL,
 ikke hardcodede tal. Ved Claude-fejl gives ét ekstra forsøg med afvisningen som rettelse.
+
+### API-nøgle fra appen
+
+Feltet øverst i spørg-panelet tager en nøgle, og mærkatet ved siden af viser, om appen kører
+med Claude eller med eksempelsvar. `POST /api/noegle` tjekker formen, lægger nøglen i
+hukommelsen som den, `src/ai.ts` bygger sin klient af ved hvert kald, og skriver den til
+`.env`, så den også gælder næste opstart. Skiftet sker uden genstart og uden genindlæsning:
+serveren svarer med den nye tilstand, som feltet sætter direkte.
+
+`src/noegle.ts` er eneste sted, nøglen bor. Hele nøglen sendes aldrig tilbage til browseren,
+kun de sidste fire tegn (`noegleMaske`), der vises som placeholder i feltet. Kan `.env` ikke
+skrives, gælder nøglen stadig i den kørende proces, og svaret får en advarsel om det.
+Feltet hører til en lokal app på egen maskine: den, der kan nå `/api/noegle`, kan skrive i
+`.env`, så serveren skal ikke eksponeres på et netværk.
 
 ### Rapporter
 
@@ -102,8 +116,9 @@ bunfig.toml             registrerer bun-plugin-tailwind for serve.static (påkr�
 .env                    ANTHROPIC_API_KEY (Bun indlæser selv filen)
 rapporter/              gemte svar som Markdown, dannes ved første gemning
 src/server.ts           Bun.serve: HTML-route + /api/dashboard, /api/skema, /api/tabel/:navn,
-                        /api/status, /api/eksempler, /api/spoerg, /api/rapport
+                        /api/status, /api/noegle, /api/eksempler, /api/spoerg, /api/rapport
 src/rapport.ts          bygger og gemmer Markdown-rapporten
+src/noegle.ts           API-nøglen: tjek, hukommelse og skrivning til .env
 src/db.ts               read-only forbindelse, dashboard-SQL, skemaopslag og koerLaesning()
                         til frie forespørgsler
 src/skema.ts            tolkning af skemaet: beskrivelser, relationer, søjleplacering
@@ -140,7 +155,8 @@ bun start   # uden hot reload
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Tilstanden læses ved opstart. Efter en ændring i `.env` skal serveren genstartes.
+Filen læses ved opstart. Redigerer man den i hånden bagefter, skal serveren genstartes;
+indsætter man i stedet nøglen i feltet i appen, slår den igennem med det samme.
 
 ## Konventioner
 

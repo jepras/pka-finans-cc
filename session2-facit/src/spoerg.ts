@@ -3,6 +3,7 @@
 import { harClaude, MODEL_ID, spoergClaude } from "./ai.ts";
 import { koerLaesning, type LaesningResultat } from "./db.ts";
 import { vaelgEksempelsvar } from "./eksempelsvar.ts";
+import { maskeretNoegle } from "./noegle.ts";
 import type { GrafSpec, Kilde, SpoergFejl, Status, Svar } from "./types.ts";
 
 export function status(): Status {
@@ -10,14 +11,16 @@ export function status(): Status {
     ? {
         kilde: "claude",
         model: MODEL_ID,
-        begrundelse: "ANTHROPIC_API_KEY er sat — frie spørgsmål oversættes til SQL af Claude.",
+        begrundelse: "Der er sat en API-nøgle — frie spørgsmål oversættes til SQL af Claude.",
+        noegleMaske: maskeretNoegle(),
       }
     : {
         kilde: "eksempelsvar",
         model: null,
         begrundelse:
-          "Ingen ANTHROPIC_API_KEY i .env — appen svarer fra et fast sæt eksempler. " +
+          "Ingen API-nøgle — appen svarer fra et fast sæt eksempler. " +
           "SQL'en køres stadig mod databasen, så tallene er rigtige.",
+        noegleMaske: null,
       };
 }
 

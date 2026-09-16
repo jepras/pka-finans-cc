@@ -6,18 +6,19 @@
  * databasen — prompten er en instruktion, ikke en sikkerhedsgrænse.
  */
 
-import { anthropic } from "@ai-sdk/anthropic";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { generateObject } from "ai";
 import { z } from "zod";
 
 import { skemaDDL } from "./db.ts";
+import { harNoegle, hentNoegle } from "./noegle.ts";
 import { RAEKKEGRAENSE, TILLADTE_TABELLER } from "./sql-vagt.ts";
 import type { GrafSpec } from "./types.ts";
 
 export const MODEL_ID = "claude-sonnet-5";
 
 export function harClaude(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY?.trim());
+  return harNoegle();
 }
 
 const grafSkema = z
@@ -106,8 +107,12 @@ export async function spoergClaude(
       ].join("\n")
     : `Spørgsmål: ${spoergsmaal}`;
 
+  // Klienten bygges pr. kald, så en nøgle gemt fra appen virker uden genstart.
+  const noegle = hentNoegle();
+  if (!noegle) throw new Error("Der er ingen API-nøgle sat.");
+
   const { object } = await generateObject({
-    model: anthropic(MODEL_ID),
+    model: createAnthropic({ apiKey: noegle })(MODEL_ID),
     schema: svarSkema,
     system: systemPrompt(),
     prompt,

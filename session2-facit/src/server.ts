@@ -1,6 +1,7 @@
 import index from "../index.html";
 import { hentDashboard, hentSkema, hentTabeludsnit } from "./db.ts";
 import { EKSEMPELSVAR } from "./eksempelsvar.ts";
+import { saetNoegle, tjekNoegle } from "./noegle.ts";
 import { erSvar, gemRapport } from "./rapport.ts";
 import { besvar, status } from "./spoerg.ts";
 
@@ -32,6 +33,30 @@ const server = Bun.serve({
     /** Kører appen med Claude eller med eksempelsvar? */
     "/api/status": {
       GET: () => Response.json(status()),
+    },
+
+    /**
+     * Gemmer en API-nøgle fra feltet i appen: den tages i brug med det samme og
+     * skrives til .env. Svaret er den nye tilstand, aldrig nøglen selv.
+     */
+    "/api/noegle": {
+      POST: async (req) => {
+        let krop: { noegle?: unknown };
+        try {
+          krop = await req.json();
+        } catch {
+          return Response.json({ fejl: "Ugyldig JSON i forespørgslen." }, { status: 400 });
+        }
+
+        const tjek = tjekNoegle(krop.noegle);
+        if (!tjek.ok) return Response.json({ fejl: tjek.grund }, { status: 400 });
+
+        const { advarsel } = await saetNoegle(tjek.noegle);
+        const tilstand = status();
+        console.log(`Spørg-panel skiftet til Claude (${tilstand.model}) via feltet i appen.`);
+
+        return Response.json({ status: tilstand, ...(advarsel ? { advarsel } : {}) });
+      },
     },
 
     /** Forslag til panelet — altid eksempelspørgsmålene, også med Claude slået til. */
@@ -97,5 +122,5 @@ console.log(`PKA A/S — Omkostningsbase 2025 kører på ${server.url}`);
 console.log(
   tilstand.kilde === "claude"
     ? `Spørg-panel: Claude (${tilstand.model})`
-    : "Spørg-panel: eksempelsvar — sæt ANTHROPIC_API_KEY i .env for frie spørgsmål",
+    : "Spørg-panel: eksempelsvar — indsæt en API-nøgle i feltet i appen for frie spørgsmål",
 );

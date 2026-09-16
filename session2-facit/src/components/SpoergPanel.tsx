@@ -1,11 +1,9 @@
 import {
-  Bot,
   ChartColumn,
   Check,
   Copy,
   CornerDownLeft,
   Database,
-  ListChecks,
   MessageSquareText,
   Save,
   Table2,
@@ -14,32 +12,15 @@ import {
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 
 import type { GemtRapport, Status, Svar } from "../types.ts";
+import { NoegleFelt } from "./NoegleFelt.tsx";
 import { SvarGraf } from "./SvarGraf.tsx";
 import { SvarTabel } from "./SvarTabel.tsx";
-import { Badge } from "./ui/badge.tsx";
 import { Button } from "./ui/button.tsx";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card.tsx";
 import { Skeleton } from "./ui/skeleton.tsx";
 import { Textarea } from "./ui/textarea.tsx";
 
 type Forslag = { id: string; spoergsmaal: string };
-
-function StatusMaerkat({ status }: { status: Status | null }) {
-  if (!status) return <Skeleton className="h-6 w-40" />;
-
-  const medClaude = status.kilde === "claude";
-  const Ikon = medClaude ? Bot : ListChecks;
-
-  return (
-    <div className="flex flex-wrap items-center gap-2">
-      <Badge variant={medClaude ? "aktiv" : "kontur"}>
-        <Ikon className="size-3.5" aria-hidden />
-        {medClaude ? `Claude — ${status.model}` : "Eksempelsvar"}
-      </Badge>
-      <span className="text-xs text-muted-foreground">{status.begrundelse}</span>
-    </div>
-  );
-}
 
 function Afsnit({
   ikon,
@@ -262,9 +243,9 @@ export function SpoergPanel({ onSvar }: { onSvar?: (svar: Svar | null) => void }
     <Card>
       <CardHeader>
         <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <CardTitle>Spørg til tallene</CardTitle>
-            <StatusMaerkat status={status} />
+            <NoegleFelt status={status} onStatus={setStatus} />
           </div>
           <CardDescription>
             Skriv et spørgsmål på dansk. Du får den SQL, der blev kørt, en forklaring på hvad den

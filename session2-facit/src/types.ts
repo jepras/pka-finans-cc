@@ -93,6 +93,14 @@ export type Status = {
   model: string | null;
   /** Kort forklaring til brugeren af, hvorfor appen kører i den tilstand. */
   begrundelse: string;
+  /** De sidste tegn af den nøgle, der er i brug, fx "sk-ant-…f4a9". Aldrig hele nøglen. */
+  noegleMaske: string | null;
+};
+
+/** Svar på en gemt nøgle: den nye tilstand, og en advarsel hvis .env ikke kunne skrives. */
+export type NoegleSvar = {
+  status: Status;
+  advarsel?: string;
 };
 
 export type GrafType = "soejle" | "linje";

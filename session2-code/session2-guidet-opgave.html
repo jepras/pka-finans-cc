@@ -489,15 +489,21 @@ Tekniske valg: Bun som runtime og bundler, med Bun.serve og en index.html, ingen
     <section class="phase">
       <div class="phase-num">4</div>
       <h2>Slå Claude til</h2>
-      <p>Indtil nu har appen svaret fra et fast sæt. Nu får den en rigtig model bag sig. Underviseren viser et link på skærmen. Bag det ligger én linje tekst.</p>
+      <p>Indtil nu har appen svaret fra et fast sæt. Nu får den en rigtig model bag sig. Først beder du appen om et sted at lægge nøglen, og så henter du nøglen.</p>
 
       <div class="step">
-        <span class="step-label">4.1 Læg nøglen i mappen</span>
-        <div class="action">Åbn linket, indtast adgangskoden underviseren siger, og kopiér linjen. Skriv så til Claude, og indsæt linjen efter kolon:</div>
-        <div class="prompt">Opret filen .env i mappen med denne linje, sørg for at den ikke kommer med i git, og genstart appen:<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="action">Genindlæs browseren.</div>
-        <div class="expect">Panelet siger nu, at det kører med Claude. Stil et spørgsmål, der ikke var med i eksemplerne: "Hvilke omkostningssteder bruger mest på eksterne rådgivere, og hvor stor en andel er det af deres samlede omkostninger?"</div>
-        <div class="insight"><strong>Læringen:</strong> Nøglen kom aldrig i materialet og aldrig i et screenshot. Den ligger i én fil på din maskine, og den bliver slettet efter workshoppen. Private data, indhold udefra og en vej ud må ikke mødes, uden at nogen har taget stilling. Det har I lige gjort.</div>
+        <span class="step-label">4.1 Bed om et felt til nøglen</span>
+        <div class="prompt">Tilføj et felt i appen, hvor jeg kan indsætte en API-nøgle. Når jeg gemmer, skal appen lægge den i .env og skifte til Claude uden at jeg skal genstarte noget. Vis ved siden af feltet om appen kører med Claude eller eksempelsvar.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Et felt og en gem-knap i appen, med teksten "eksempelsvar" ved siden af.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">4.2 Hent nøglen og sæt den ind</span>
+        <div class="action">Åbn dette link: <a href="https://vault.bitwarden.eu/#/send/EO92vfsUTkKA-7THAQ4XCw/amlezobS9NAJrz_8PUrhSg" target="_blank" rel="noopener">Nøgle til øvelse 2</a>. Bed instruktørerne om kodeordet. Bag linket ligger én linje, der starter med <code>sk-ant-</code>. Kopiér den.</div>
+        <div class="action">Indsæt nøglen i feltet i appen i browseren, og klik gem. Ikke i Claude Code, og ikke i en fil.</div>
+        <div class="expect">Teksten ved feltet skifter til Claude. Stil et spørgsmål, der ikke var med i eksemplerne: "Hvilke omkostningssteder bruger mest på eksterne rådgivere, og hvor stor en andel er det af deres samlede omkostninger?"</div>
+        <div class="hint">Virker feltet ikke, så kopiér linjen fra Bitwarden igen, og kør denne kommando i Claude Code. Den læser fra udklipsholderen, så nøglen aldrig står i samtalen: <code>! powershell -c "Get-Clipboard | Set-Content -Path .env -NoNewline"</code>. Skriv derefter "Genstart appen."</div>
+        <div class="insight"><strong>Læringen:</strong> Nøglen kom aldrig i materialet, aldrig i samtalen med Claude og aldrig i et screenshot. Den ligger i én fil på din maskine, og den bliver slettet efter workshoppen. Private data, indhold udefra og en vej ud må ikke mødes, uden at nogen har taget stilling. Det har I lige gjort.</div>
       </div>
     </section>
 
