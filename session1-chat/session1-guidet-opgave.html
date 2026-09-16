@@ -405,8 +405,8 @@
     <div class="toc">
       <h3>De fem faser</h3>
       <ol>
-        <li><b>Find materialet og opret et Project.</b> To kontekstfiler i Knowledge.</li>
-        <li><b>Tjek at Claude kan se materialet.</b> Ét spørgsmål.</li>
+        <li><b>Opret et Project.</b> To kontekstfiler i Knowledge.</li>
+        <li><b>Tjek at Claude kan se konteksten.</b> Ét spørgsmål.</li>
         <li><b>Byg afstemningsværktøjet.</b> Upload, tabel, status.</li>
         <li><b>Gør det til et arbejdsredskab.</b> Afkrydsning, fremdrift og eksport.</li>
         <li><b>Mere data, og dine egne spørgsmål.</b> Den åbne opgave, som du løser solo.</li>
@@ -416,50 +416,48 @@
     <!-- ───────────────────────── FASE 1 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">1</div>
-      <h2>Find materialet og opret et Project</h2>
-      <p>Et Project er det fælles fundament. Her lægger du <em>konteksten</em> ind: hvad opgaven går ud på, og hvordan data ser ud. Selve tallene kommer først ind senere, i værktøjet. Den opdeling er med vilje, for konteksten er den samme hvert kvartal, mens tallene skiftes ud.</p>
+      <h2>Opret et Project, og giv det konteksten</h2>
+      <p>Et Project er det fælles fundament. Her lægger du <em>konteksten</em> ind: hvad opgaven går ud på, og hvordan data ser ud. Selve tallene kommer først ind senere. Den opdeling er med vilje, for konteksten er den samme hvert kvartal, mens tallene skiftes ud.</p>
 
       <div class="step">
-        <span class="step-label">1.1 Find filerne på din egen maskine</span>
-        <p>Filerne ligger allerede i det materiale, du hentede ned. Du skal ikke downloade noget igen. De ligger i <b>to mapper</b>, og det er vigtigt at holde dem adskilt.</p>
-        <div class="action">Åbn den mappe, du pakkede ud, og find <code>session1-chat/</code>. Lad vinduet stå åbent, du skal bruge begge mapper undervejs.</div>
+        <span class="step-label">1.1 Opret Projectet</span>
+        <div class="action">I Claude: klik <b>Projects</b> i sidebaren → <b>New project</b>. Kald det <code>PKA Investeringsomkostninger Q1 2026</code>.</div>
+        <div class="expect">Et tomt projekt med en <b>Knowledge</b>-sektion, der venter på filer.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.2 Læg konteksten i Knowledge</span>
+        <p>Filerne ligger allerede i det materiale, du hentede ned. Du skal ikke downloade noget igen.</p>
+        <div class="action">Åbn den mappe, du pakkede ud, og gå ind i <code>session1-chat/project/</code>.</div>
         <div class="materials">
-          <h3>project, skal i projektets Knowledge nu</h3>
+          <h3>De to filer i mappen</h3>
           <ul>
             <li><code>projekt-kontekst.md</code> <span class="kind">· rammen om opgaven og den rolle, Claude arbejder i</span></li>
             <li><code>afstemnings-kontekst.md</code> <span class="kind">· hvordan fakturaen og bogføringsfilen er bygget op</span></li>
           </ul>
         </div>
-        <div class="materials">
-          <h3>artifact-uploads, skal først bruges i fase 3</h3>
-          <ul>
-            <li><code>Faktura_NordicCapitalPartners_Q1_2026.pdf</code> <span class="kind">· forvalterfaktura, Q1 2026</span></li>
-            <li><code>PKA_bogforte_investeringsomkostninger.csv</code> <span class="kind">· jeres bogføring, semikolon-separeret</span></li>
-          </ul>
-        </div>
-        <p class="muted">Kontekstfilerne beskriver opgaven og datamodellen. Datafilerne er selve kvartalets tal, og dem uploader du i værktøjet, når det er bygget.</p>
+        <div class="action">Træk <b>begge filer</b> ind i projektets <b>Knowledge</b>.</div>
+        <div class="expect">De to filer står listet under Knowledge.</div>
         <div class="hint">Mangler du materialet, så hent <a href="https://github.com/jepras/pka-finans-cc/archive/refs/heads/main.zip">zip-filen med hele workshopmaterialet</a> og pak den ud, før du går videre.</div>
+        <div class="insight"><strong>Hvorfor det er vigtigt:</strong> Knowledge gælder på tværs af alle samtaler i projektet. Beskrivelsen af opgaven og datamodellen ændrer sig ikke fra kvartal til kvartal, så den lægger du fast ét sted i stedet for at forklare den forfra hver gang.</div>
       </div>
 
       <div class="step">
-        <span class="step-label">1.2 Opret Projectet</span>
-        <div class="action">I Claude: klik <b>Projects</b> i sidebaren → <b>New project</b>. Kald det <code>PKA Investeringsomkostninger Q1 2026</code>.</div>
-        <div class="action">Træk <b>de to filer</b> fra <code>session1-chat/project/</code> ind i projektets <b>Knowledge</b>. Datafilerne skal <b>ikke</b> ind her.</div>
-        <div class="action">Start en ny samtale <b>inde i projektet</b>, ikke en almindelig samtale uden Project.</div>
-        <div class="expect">De to kontekstfiler står listet under projektets Knowledge, og den nye samtale viser at den har adgang til dem.</div>
-        <div class="insight"><strong>Hvorfor det er vigtigt:</strong> Knowledge er det, der gælder på tværs af alle samtaler i projektet. Beskrivelsen af opgaven og datamodellen ændrer sig ikke fra kvartal til kvartal, så den lægger du fast. Tallene skifter hver gang, så dem holder du ude.</div>
+        <span class="step-label">1.3 Start en samtale inde i projektet</span>
+        <div class="action">Klik ind i projektet og start en ny samtale derinde, ikke en almindelig samtale uden Project.</div>
+        <div class="expect">Samtalen viser, at den hører til projektet og har adgang til dets Knowledge.</div>
       </div>
     </section>
 
     <!-- ───────────────────────── FASE 2 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">2</div>
-      <h2>Tjek at Claude kan se materialet</h2>
-      <p>Konteksten ligger nu i projektets Knowledge. Før du bygger noget, så få det bekræftet med ét spørgsmål, så du ved, at Claude rent faktisk arbejder ud fra den.</p>
+      <h2>Tjek at Claude kan se konteksten</h2>
+      <p>Før du bygger noget, så få det bekræftet med ét spørgsmål, så du ved, at Claude rent faktisk arbejder ud fra det, du lagde ind.</p>
 
       <div class="step">
         <span class="step-label">2.1 Spørg Claude, hvad den kan se</span>
-        <div class="prompt">Giv mig et kort overblik over det, der ligger i dette projekts Knowledge. Hvad går opgaven ud på, hvilke to datakilder arbejder vi med, og hvilke mandater indgår?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="prompt">Hej, hvad kontekst har du tilgængeligt i denne chat?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="expect">Claude kan gengive opgaven og datamodellen, uden at du har uploadet noget i selve samtalen, og uden at have set en eneste faktura endnu.</div>
         <div class="insight"><strong>Læringen:</strong> Alt hvad der ligger i Knowledge, er med i hver eneste samtale i projektet. Du skal ikke vedhæfte det igen, og du behøver ikke forklare opgaven forfra næste gang.</div>
       </div>
@@ -495,7 +493,15 @@ Design: shadcn/ui-stil med rounded-xl kort og subtile skygger. PKA-rød (#92004D
 
       <div class="step">
         <span class="step-label">3.2 Test værktøjet med kvartalets tal</span>
-        <div class="action">Upload de to filer fra <code>session1-chat/artifact-uploads/</code> <b>i selve artifaktet</b>. Det er her, tallene kommer ind. Knowledge er Claudes reference, upload-felterne er værktøjets input.</div>
+        <p>Nu kommer kvartalets tal ind. De ligger i den anden mappe, du endnu ikke har rørt.</p>
+        <div class="materials">
+          <h3>session1-chat/artifact-uploads/</h3>
+          <ul>
+            <li><code>Faktura_NordicCapitalPartners_Q1_2026.pdf</code> <span class="kind">· forvalterfaktura, Q1 2026</span></li>
+            <li><code>PKA_bogforte_investeringsomkostninger.csv</code> <span class="kind">· jeres bogføring, semikolon-separeret</span></li>
+          </ul>
+        </div>
+        <div class="action">Upload begge filer <b>i selve artifaktet</b>, ikke i Knowledge. Knowledge er Claudes reference, upload-felterne er værktøjets input.</div>
         <div class="expect">Otte fakturalinjer i tabellen. Seks af dem stemmer mod bogføringen. To af dem gør ikke, og dem skal du selv finde.</div>
         <div class="hint">Får du flere eller færre linjer end 8, så er det næsten altid PDF-parsingen der har fanget noget den ikke skulle (et fakturanummer, en adresse). Sig det til Claude direkte: "du har lavet en linje ud af X, det er ikke et mandat".</div>
         <div class="insight"><strong>Læringen:</strong> Et lille, konkret værktøj med kendte data er hurtigere at bygge og teste end at bede om en generel analyse. Du kender svaret på forhånd, så du kan se om værktøjet har ret.</div>
