@@ -390,12 +390,11 @@
     </figure>
 
     <div class="toc">
-      <h3>De seks faser</h3>
+      <h3>De fem faser</h3>
       <ol>
         <li><b>Åbn mappen i Claude Desktop.</b> Og få Bun på plads med én prompt.</li>
         <li><b>Startprompten.</b> Hvad du vil bygge, og de tekniske valg. Dashboardet står.</li>
-        <li><b>Spørg-panelet.</b> Spørgsmål på dansk, svar med SQL, forklaring, tabel og graf.</li>
-        <li><b>Filen i mappen.</b> Gem svaret som rapport.</li>
+        <li><b>Snak med dine data, simuleret.</b> Spørgsmål på dansk, svar med SQL, forklaring, tabel og graf.</li>
         <li><b>Slå Claude til.</b> Nøglen ind, og frie spørgsmål.</li>
         <li><b>Byg videre.</b> Idéer til det næste, I selv vil have.</li>
       </ol>
@@ -413,7 +412,7 @@
     <!-- ───────────────────────── FASE 1 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">1</div>
-      <h2>Åbn mappen i Claude Code</h2>
+      <h2>Åbn mappen i Claude Desktop</h2>
       <p>Mappen er Claudes verden. Alt hvad den ved om opgaven, står i de filer, der ligger i den mappe, du åbner. Så det første valg er, hvilken mappe.</p>
 
       <div class="step">
@@ -465,8 +464,8 @@ Tekniske valg: Bun som runtime og bundler, med Bun.serve og en index.html, ingen
     <!-- ───────────────────────── FASE 3 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">3</div>
-      <h2>Spørg-panelet</h2>
-      <p>Dashboardet svarer på de spørgsmål, nogen har besluttet på forhånd. Nu tilføjer vi det, der svarer på dine. Bemærk, at prompten beskriver, hvad du vil have, ikke hvordan det skal laves.</p>
+      <h2>Snak med dine data, i første omgang simuleret</h2>
+      <p>Dashboardet svarer på de spørgsmål, nogen har besluttet på forhånd. Nu tilføjer vi det, der svarer på dine. I første omgang bygger vi en <strong>simuleret</strong> version: appen svarer fra et fast sæt eksempelsvar, så I kan se og prøve hele funktionen uden en API-nøgle. Den rigtige model kobler vi på i fase 4. Bemærk, at prompten beskriver, hvad du vil have, ikke hvordan det skal laves.</p>
 
       <div class="step">
         <span class="step-label">3.1 Bed om panelet</span>
@@ -482,33 +481,18 @@ Tekniske valg: Bun som runtime og bundler, med Bun.serve og en index.html, ingen
         <div class="action">Klik på eksempelspørgsmålene, ét ad gangen. Læs forklaringen, <em>før</em> du kigger på tabellen.</div>
         <div class="expect">SQL'en, forklaringen, en tabel med rigtige tal fra databasen, og en graf. Forklaringen fortæller også, hvad forespørgslen ikke tager højde for, for eksempel at moms ikke er med.</div>
         <div class="insight"><strong>Læringen:</strong> SQL'en er beviset for dem, der kan læse den. Forklaringen er beviset for alle andre. Ingen af delene kræver, at du stoler på Claude. Du kan se, hvad den gjorde, og hvad den ikke gjorde.</div>
-        <div class="hint">Appen svarer fra et fast sæt lige nu, så den kender kun eksempelspørgsmålene. Frie spørgsmål kommer i fase 5.</div>
+        <div class="hint">Appen svarer fra et fast sæt lige nu, så den kender kun eksempelspørgsmålene. Frie spørgsmål kommer i fase 4.</div>
       </div>
     </section>
 
     <!-- ───────────────────────── FASE 4 ───────────────────────── -->
     <section class="phase">
       <div class="phase-num">4</div>
-      <h2>Filen i mappen</h2>
-      <p>Et svar i et vindue forsvinder. Et svar i en fil kan sendes, vedlægges og findes igen. Én kort prompt.</p>
-
-      <div class="step">
-        <span class="step-label">4.1 Gem som rapport</span>
-        <div class="prompt">Det virker. Tilføj en knap "Gem som rapport" ved svaret. Den skal gemme svaret som en fil i mappen rapporter/ med spørgsmålet, forklaringen, SQL og resultatet, så jeg kan sende det til en kollega. Vis filnavnet, når det er gemt.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
-        <div class="action">Stil et spørgsmål, klik <b>Gem som rapport</b>, og åbn mappen <code>rapporter/</code> i <code>session2-code</code>.</div>
-        <div class="expect">En fil med dagens dato og spørgsmålet i navnet. Åbn den: spørgsmål, forklaring, SQL og tabel, klar til at sende videre.</div>
-        <div class="insight"><strong>Læringen:</strong> Du sagde ikke, hvilket filformat, hvordan filnavnet skulle dannes, eller hvad der sker, hvis du gemmer to gange. Claude valgte. Er du ikke tilfreds med et valg, siger du det, ligesom til en kollega.</div>
-      </div>
-    </section>
-
-    <!-- ───────────────────────── FASE 5 ───────────────────────── -->
-    <section class="phase">
-      <div class="phase-num">5</div>
       <h2>Slå Claude til</h2>
       <p>Indtil nu har appen svaret fra et fast sæt. Nu får den en rigtig model bag sig. Underviseren viser et link på skærmen. Bag det ligger én linje tekst.</p>
 
       <div class="step">
-        <span class="step-label">5.1 Læg nøglen i mappen</span>
+        <span class="step-label">4.1 Læg nøglen i mappen</span>
         <div class="action">Åbn linket, indtast adgangskoden underviseren siger, og kopiér linjen. Skriv så til Claude, og indsæt linjen efter kolon:</div>
         <div class="prompt">Opret filen .env i mappen med denne linje, sørg for at den ikke kommer med i git, og genstart appen:<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
         <div class="action">Genindlæs browseren.</div>
@@ -517,9 +501,9 @@ Tekniske valg: Bun som runtime og bundler, med Bun.serve og en index.html, ingen
       </div>
     </section>
 
-    <!-- ───────────────────────── FASE 6 ───────────────────────── -->
+    <!-- ───────────────────────── FASE 5 ───────────────────────── -->
     <section class="phase">
-      <div class="phase-num">6</div>
+      <div class="phase-num">5</div>
       <h2>Byg videre</h2>
       <p>Herfra er der ingen færdige prompts. I har set formen: beskriv hvad du vil have, i almindeligt sprog, og se det ske. Nogle retninger, der er værd at forfølge:</p>
 
@@ -531,6 +515,7 @@ Tekniske valg: Bun som runtime og bundler, med Bun.serve og en index.html, ingen
           <li><strong>Udvikling over tid.</strong> Hvilke kreditorer er vokset mest fra Q1 til Q4? Hvilke konti stiger måned for måned?</li>
           <li><strong>Fordelingen.</strong> Vis omkostningsbasen fordelt på formueforvaltning og medlemsadministration pr. kontogruppe, ikke kun i alt.</li>
           <li><strong>Gemte spørgsmål.</strong> Lad appen huske de spørgsmål, I stiller ofte, som knapper, så de kan køres igen med ét klik næste kvartal.</li>
+          <li><strong>Gem som rapport.</strong> En knap, der gemmer spørgsmål, forklaring, SQL og resultat som en fil i mappen, så det kan sendes til en kollega.</li>
           <li><strong>Eksport til Excel.</strong> En knap, der lægger resultattabellen i en fil, kollegaen kan åbne direkte.</li>
           <li><strong>Jeres egne kolonner.</strong> Læg et ufølsomt udtræk i <code>data/</code>, og bed Claude importere det i databasen. Så virker resten af appen på jeres tal.</li>
           <li><strong>Opfølgning på et svar.</strong> Lad brugeren stille et opfølgende spørgsmål til det svar, der står på skærmen: "og kun for Q4?"</li>
@@ -539,14 +524,14 @@ Tekniske valg: Bun som runtime og bundler, med Bun.serve og en index.html, ingen
 
       <div class="step" style="margin-top: 22px;">
         <div class="hint">Formulér spørgsmålet, før du beder om featuren. "Vis mig hvilke kreditorer der er vokset mest fra Q1 til Q4" giver et svar. "Lav flere grafer" giver pynt.</div>
-        <div class="insight"><strong>Læringen:</strong> I har nu en mappe med en app, en datamodel, en CLAUDE.md med jeres valg og en mappe med rapporter. Det er ikke drift, det er en prototype. Men det er en prototype, hvor hvert tal kan spores tilbage til en SQL og en forklaring, og det er mere end de fleste Excel-ark kan sige.</div>
+        <div class="insight"><strong>Læringen:</strong> I har nu en mappe med en app, en datamodel, en CLAUDE.md med jeres valg. Det er ikke drift, det er en prototype. Men det er en prototype, hvor hvert tal kan spores tilbage til en SQL og en forklaring, og det er mere end de fleste Excel-ark kan sige.</div>
       </div>
     </section>
 
     <details class="context" style="margin-top: 60px;">
       <summary>Hvis noget går galt: det færdige eksempel</summary>
       <div class="context-body">
-        <p>I <code>session2-facit/</code> ligger den app, vi selv fik ud af at køre prompterne igennem, inklusiv en gemt rapport. Kør <code>bun install</code> og <code>bun run dev</code> i den mappe, hvis du vil se slutresultatet, eller kopiér en fil derfra, hvis din egen version er kørt fast. Det er et eksempel, ikke et facit i skolebetydningen. Din version må gerne være anderledes.</p>
+        <p>I <code>session2-facit/</code> ligger den app, vi selv fik ud af at køre prompterne igennem. Kør <code>bun install</code> og <code>bun run dev</code> i den mappe, hvis du vil se slutresultatet, eller kopiér en fil derfra, hvis din egen version er kørt fast. Det er et eksempel, ikke et facit i skolebetydningen. Din version må gerne være anderledes.</p>
       </div>
     </details>
 
