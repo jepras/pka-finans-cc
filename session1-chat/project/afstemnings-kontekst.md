@@ -16,11 +16,12 @@ Der er 7 mandater, men 8 fakturalinjer, fordi PKA Infrastructure faktureres båd
 - PKA Emerging Markets
 - PKA Fixed Income
 - PKA Nordic High Yield
-- PKA Infrastructure, basishonorar og performancehonorar
+- PKA Infrastructure, basishonorar
+- PKA Infrastructure Performance, performancehonorar
 - PKA Renewable Infrastructure II
 - PKA Private Equity Co-Invest
 
-De to kilder skriver ikke infrastrukturlinjerne ens. Fakturaen sætter "basishonorar" og "performancehonorar" efter mandatnavnet, adskilt af en tankestreg, mens bogføringen bruger "PKA Infrastructure" og "PKA Infrastructure Performance". De skal matches som de samme to linjer.
+Mandatnavnene er skrevet ens i de to kilder. Bemærk dog, at "PKA Infrastructure" er indeholdt i "PKA Infrastructure Performance". Match derfor det længste navn først, så performancelinjen ikke bliver forvekslet med basishonoraret.
 
 ## Afstemningen
 

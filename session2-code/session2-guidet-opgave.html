@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Session 2 · Claude Code · Spørg dine tal</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2392004D%22/><rect x=%2224%22 y=%2254%22 width=%2214%22 height=%2226%22 fill=%22white%22/><rect x=%2243%22 y=%2236%22 width=%2214%22 height=%2244%22 fill=%22white%22/><rect x=%2262%22 y=%2220%22 width=%2214%22 height=%2260%22 fill=%22white%22/></svg>">
+  <style>
+    :root {
+      --background: #fbfafb;
+      --foreground: #22131b;
+      --card: #ffffff;
+      --muted: #f6f2f4;
+      --muted-foreground: #6f6369;
+      --border: #e4dde1;
+      --primary: #92004D;
+      --primary-hover: #660036;
+      --primary-foreground: #ffffff;
+      --ruby: #CE0060;
+      --bordeaux: #660036;
+      --warm-grey: #ACA39A;
+      --mint: #9EDFCE;
+      --lilac: #C5AED5;
+      --powder: #E88F80;
+      --sky: #6E9BAA;
+      --yellow: #EFC47C;
+      --leaf: #85B499;
+      --radius: 10px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(206, 0, 96, .08), transparent 36%),
+        radial-gradient(circle at 86% 12%, rgba(146, 0, 77, .06), transparent 40%),
+        linear-gradient(180deg, rgba(245, 241, 243, .85), rgba(251, 250, 251, 0) 520px),
+        var(--background);
+      color: var(--foreground);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 56px 32px 120px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 20px;
+      color: var(--bordeaux);
+      font-size: clamp(32px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -.01em;
+    }
+    h2 {
+      margin: 0 0 6px;
+      color: var(--bordeaux);
+      font-size: 22px;
+      line-height: 1.2;
+    }
+    h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    p { margin-bottom: 16px; color: #3f3a3d; }
+    p.lead { font-size: 19.5px; color: #2f1b25; line-height: 1.5; margin-bottom: 0; max-width: 62ch; }
+    .phase > p { max-width: 72ch; }
+    p.muted { color: var(--muted-foreground); font-size: 14.5px; }
+
+    code {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--muted);
+      padding: 1px 6px;
+      color: var(--bordeaux);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .9em;
+    }
+
+    a { color: var(--primary); text-decoration: none; border-bottom: 1px solid rgba(146, 0, 77, .3); }
+    a:hover { border-bottom-color: var(--primary); }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 760;
+      letter-spacing: .01em;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      background: var(--ruby);
+      box-shadow: 0 0 0 4px rgba(206, 0, 96, .14);
+    }
+
+    .toc {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      padding: 20px 24px;
+      margin: 40px 0 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .03);
+    }
+    .toc h3 { margin-bottom: 12px; color: var(--bordeaux); font-size: 17px; letter-spacing: .01em; }
+    .toc ol { margin: 0; padding-left: 22px; color: var(--muted-foreground); font-size: 14.5px; }
+    .toc li { margin: 9px 0; }
+    .toc li b { color: var(--foreground); }
+
+    /* Preview af det færdige værktøj */
+    figure.preview {
+      margin: 32px 0 0;
+      padding: 0;
+    }
+    figure.preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 24px rgba(34, 19, 27, .1);
+    }
+    figure.preview figcaption {
+      margin-top: 10px;
+      color: var(--muted-foreground);
+      font-size: 13.5px;
+    }
+
+    /* A phase = one big numbered section */
+    .phase {
+      position: relative;
+      margin: 76px 0 0;
+      padding: 36px 0 0;
+      border-top: 1px solid var(--border);
+    }
+    .phase:first-of-type { border-top: 0; padding-top: 0; margin-top: 56px; }
+
+    .phase-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      margin-bottom: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .phase > p { font-size: 16px; }
+
+    /* A step inside a phase */
+    .step {
+      margin: 28px 0;
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: 0 1px 2px rgba(16, 12, 14, .03);
+    }
+    .step-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(146, 0, 77, .08);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: .01em;
+    }
+    .step p { margin: 10px 0; }
+
+    /* Materials: downloadable workshop files */
+    .materials {
+      margin: 14px 0;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--muted);
+    }
+    .materials h3 { font-size: 11px; letter-spacing: .01em; color: var(--muted-foreground); margin-bottom: 8px; }
+    .materials ul { margin: 0; padding-left: 18px; }
+    .materials li { margin: 5px 0; font-size: 14.5px; }
+    .materials .kind { color: var(--muted-foreground); font-size: 12.5px; }
+
+    /* Prompt-box: user-typed prompt */
+    .prompt {
+      position: relative;
+      margin: 14px 0;
+      padding: 14px 124px 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #1f1b1f;
+      color: #f3f6f6;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 104px;
+      justify-content: center;
+      padding: 7px 14px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background: var(--ruby);
+      color: #fff;
+      font-family: inherit;
+      font-size: 12.5px;
+      letter-spacing: .01em;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .35);
+      transition: background .15s ease, transform .1s ease, box-shadow .15s ease;
+    }
+    .copy-btn::before {
+      content: "";
+      width: 11px;
+      height: 13px;
+      border: 1.6px solid currentColor;
+      border-radius: 2.5px;
+      box-shadow: 3px -3px 0 -1.6px currentColor, 3px -3px 0 0 currentColor;
+      flex: none;
+      margin-left: 3px;
+    }
+    .copy-btn:hover { background: #e2126f; box-shadow: 0 2px 10px rgba(206, 0, 96, .45); }
+    .copy-btn:active { transform: translateY(1px); }
+    .copy-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .copy-btn.copied { background: #4f8f6b; box-shadow: 0 1px 6px rgba(0, 0, 0, .3); }
+    .copy-btn.copied::before {
+      width: 5px;
+      height: 10px;
+      border-width: 0 2px 2px 0;
+      border-radius: 0;
+      box-shadow: none;
+      transform: rotate(42deg) translate(-1px, -1px);
+    }
+    .prompt::before {
+      content: "Prompt";
+      display: inline-block;
+      margin: -2px 8px 4px -2px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(206, 0, 96, .3);
+      color: #f5d6e3;
+      font-size: 10.5px;
+      letter-spacing: .01em;
+      font-weight: 700;
+      vertical-align: top;
+    }
+
+    /* Long prompt: collapsed by default so the page stays readable */
+    details.prompt-fold {
+      margin: 14px 0;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--card);
+      overflow: hidden;
+    }
+    details.prompt-fold > summary {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--primary);
+      list-style: none;
+    }
+    details.prompt-fold > summary::-webkit-details-marker { display: none; }
+    details.prompt-fold > summary::before { content: "▸ "; }
+    details.prompt-fold[open] > summary::before { content: "▾ "; }
+    details.prompt-fold[open] > summary { border-bottom: 1px solid var(--border); }
+    details.prompt-fold .prompt { margin: 0; border: 0; border-radius: 0; }
+    details.prompt-fold .prompt::before { content: "Prompt. Indsæt hele blokken"; }
+
+    /* Action callout (do this in the UI) */
+    .action {
+      margin: 14px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(110, 155, 170, .35);
+      border-radius: 7px;
+      background: rgba(110, 155, 170, .1);
+      color: #2c4d57;
+      font-size: 14.5px;
+    }
+    .action::before {
+      content: "Gør";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(110, 155, 170, .25);
+      color: #2c4d57;
+      font-size: 10.5px;
+      letter-spacing: .01em;
+      font-weight: 700;
+    }
+
+    /* Expectation block */
+    .expect {
+      margin: 14px 0;
+      padding: 11px 14px;
+      border: 1px solid rgba(133, 180, 153, .4);
+      border-radius: 7px;
+      background: rgba(133, 180, 153, .12);
+      color: #305e44;
+      font-size: 14.5px;
+    }
+    .expect::before {
+      content: "Forvent";
+      display: inline-block;
+      margin-right: 9px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      background: rgba(133, 180, 153, .26);
+      color: #305e44;
+      font-size: 10.5px;
+      letter-spacing: .01em;
+      font-weight: 700;
+    }
+
+    /* Insight / why-this-matters callout */
+    .insight {
+      margin: 18px 0 2px;
+      padding: 12px 14px;
+      border-left: 4px solid var(--yellow);
+      background: rgba(239, 196, 124, .12);
+      border-radius: 0 7px 7px 0;
+      color: #6b4a08;
+      font-size: 14.5px;
+    }
+    .insight strong { color: #4d3406; }
+
+    /* Hint / aside */
+    .hint {
+      margin: 14px 0;
+      padding: 10px 13px;
+      border: 1px dashed var(--border);
+      border-radius: 7px;
+      background: #fefcfa;
+      color: var(--muted-foreground);
+      font-size: 13.5px;
+    }
+    .hint::before {
+      content: "Hint";
+      font-weight: 700;
+      color: var(--bordeaux);
+      margin-right: 8px;
+    }
+
+
+    /* Final brief box */
+    .mission {
+      margin: 28px 0 0;
+      padding: 22px 24px;
+      border: 1px solid rgba(146, 0, 77, .25);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(146, 0, 77, .07), rgba(146, 0, 77, .02));
+    }
+    .mission .label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--ruby);
+      color: #fff;
+      font-size: 11px;
+      letter-spacing: .01em;
+      font-weight: 760;
+    }
+    .mission h3 { font-size: 20px; color: var(--bordeaux); margin-bottom: 6px; }
+    .mission p { color: #3f3a3d; font-size: 15.5px; }
+
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Session 2 · Claude Code · Guidet opgave</div>
+    <h1>Byg en app, der svarer på spørgsmål til jeres omkostningstal, og som viser hvordan den kom frem til svaret</h1>
+    <p class="lead">Du bygger en lille webapp i en mappe. Den viser PKA A/S' omkostningsbase 2025 som et dashboard, og den lader dig stille spørgsmål på dansk: "hvad brugte vi på licenser i Q4, pr. kreditor?" Claude oversætter til SQL, appen kører SQL'en og viser fire ting side om side: SQL'en, en forklaring på almindeligt dansk af hvad den gør, resultattabellen og en graf. Du bygger den ikke i én prompt. Du bygger den lag for lag, og du kontrollerer undervejs.</p>
+
+    <figure class="preview">
+      <img src="vaerktoej-preview.png" alt="Skærmbillede af den færdige app med fire KPI-kort, en stablet søjlegraf pr. kvartal, en kreditortabel og et spørg-panel, hvor SQL, forklaring, resultattabel og graf står side om side." loading="lazy">
+      <figcaption>Sådan så resultatet ud, da vi selv kørte alle prompts igennem. Dit kommer til at se lidt anderledes ud, og det er meningen.</figcaption>
+    </figure>
+
+    <div class="toc">
+      <h3>De syv faser</h3>
+      <ol>
+        <li><b>Åbn mappen og få Bun på plads.</b> Én prompt, Claude installerer selv.</li>
+        <li><b>Planlæg og byg skelettet.</b> Plan mode, godkend, dashboard på skærmen.</li>
+        <li><b>Spørg-panelet.</b> SQL, forklaring og tabel, side om side.</li>
+        <li><b>Grafen.</b> Én lille prompt, ét nyt lag.</li>
+        <li><b>Kontrollen.</b> Den fejler, og I finder ud af hvorfor.</li>
+        <li><b>Filen i mappen.</b> Gem svaret som rapport, og slå Claude til.</li>
+        <li><b>Solo.</b> To fælder mere, og jeres egne spørgsmål.</li>
+      </ol>
+    </div>
+
+    <details class="context">
+      <summary>Baggrund: hvorfor lige denne opgave</summary>
+      <div class="context-body">
+        <p>Økonomiopfølgning starter næsten altid med et udtræk fra Finanskuben og et spørgsmål: hvad brugte vi på det her, hvem fik pengene, og hvordan har det udviklet sig? I dag er vejen fra spørgsmål til svar et Excel-ark, en pivot og en del håndarbejde. Den her app gør vejen kortere, men den gør noget vigtigere: den viser <em>hvordan</em> den kom frem til svaret, så du kan vurdere det, uanset om du kan læse SQL eller ikke.</p>
+        <p>Data er syntetisk. Konti, kreditorer og beløb er opdigtede, men formen er den samme som et rigtigt udtræk, og der er lagt tre fejl ind, som et rigtigt udtræk også kunne have. Én af dem finder I i fase 5. De to andre er jeres i fase 7.</p>
+        <p>Undervejs bruger I det, der blev vist på slides før øvelsen: mappen som Claudes verden, plan mode, tilladelser, og en kontrol der kan fejle. Alt ender som filer i mappen. Ikke et svar i et chatvindue.</p>
+      </div>
+    </details>
+
+    <!-- ───────────────────────── FASE 1 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">1</div>
+      <h2>Åbn mappen og få Bun på plads</h2>
+      <p>Appen kører på Bun, en lille JavaScript-runtime, der også er bundler og pakkehåndtering i ét. Den skal installeres én gang. Det behøver du ikke gøre selv, det kan Claude Code.</p>
+
+      <div class="step">
+        <span class="step-label">1.1 Find mappen</span>
+        <div class="action">Åbn det materiale, du pakkede ud, og find <code>session2-code/spoerg-dine-tal/</code>. Det er den mappe, Claude Code skal arbejde i. Ikke roden af materialet, og ikke <code>FACIT/</code>.</div>
+        <div class="materials">
+          <h3>Det, der allerede ligger i mappen</h3>
+          <ul>
+            <li><code>CLAUDE.md</code> <span class="kind">· regler og stack, som Claude læser automatisk</span></li>
+            <li><code>data/finanskube-2025.sqlite</code> <span class="kind">· udtrækket, ca. 3.300 transaktioner</span></li>
+            <li><code>data/DATAMODEL.md</code> <span class="kind">· tabeller og kolonner forklaret</span></li>
+            <li><code>kontroller/</code> og <code>scripts/kontrol.ts</code> <span class="kind">· fem gyldne spørgsmål med kendte svar</span></li>
+            <li><code>server/mock.ts</code> og <code>server/provider.ts</code> <span class="kind">· svar uden API-nøgle, og skiftet til Claude med nøgle</span></li>
+            <li><code>components/ui/</code> <span class="kind">· fem færdige shadcn-komponenter</span></li>
+          </ul>
+        </div>
+        <p class="muted">Det, der ikke ligger der, er selve appen. Ingen server, ingen side, intet dashboard. Det er det, I bygger.</p>
+        <div class="hint">Mangler du materialet, så hent <a href="https://github.com/jepras/pka-finans-cc/archive/refs/heads/main.zip">zip-filen med hele workshopmaterialet</a> og pak den ud, før du går videre.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.2 Åbn Claude Code i mappen</span>
+        <div class="action">Åbn Claude Code-appen. Vælg <b>Open folder</b> og peg på <code>spoerg-dine-tal/</code>. Start en ny samtale.</div>
+        <div class="action">Tilladelser: vælg <b>Accept edits</b>. Claude må rette filer uden at spørge hver gang, men spørger stadig før den kører kommandoer.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">1.3 Første prompt: installer og kig rundt</span>
+        <div class="prompt">Tjek om Bun er installeret ved at køre bun --version. Hvis den mangler, så installer den. På Windows: powershell -c "irm bun.sh/install.ps1 | iex". På Mac: curl -fsSL https://bun.sh/install | bash. Kør derefter bun install i denne mappe. Læs så CLAUDE.md og data/DATAMODEL.md, og fortæl mig med højst fem linjer hvad der ligger i mappen, og hvad der mangler, før appen kan køre. Byg ikke noget endnu.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Claude beder om lov til at køre kommandoerne. Sig ja til hver enkelt. Læs hvad den vil køre, før du siger ja.</div>
+        <div class="expect">Fem linjer. Claude kan se databasen, datamodellen, kontrollerne og komponenterne, og den siger at server, side og dashboard mangler. Den har ikke skrevet en eneste fil.</div>
+        <div class="insight"><strong>Læringen:</strong> Mappen er Claudes verden. Alt hvad den ved om opgaven, står i filerne i mappen, og CLAUDE.md er den fil, den læser først. Jo bedre den er, jo mindre skal du forklare i hver prompt.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 2 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">2</div>
+      <h2>Planlæg og byg skelettet</h2>
+      <p>Nu skal appen have en krop: en server, en side og et dashboard med de tal, alle kender. Ikke spørg-panelet endnu. Det kommer i næste fase, og det er med vilje: ét lag ad gangen er lettere at kontrollere end det hele på én gang.</p>
+
+      <div class="step">
+        <span class="step-label">2.1 Skift til plan mode</span>
+        <div class="action">Tryk <b>Shift+Tab</b> indtil der står <b>plan mode</b> nederst. I plan mode ændrer Claude ingen filer. Den læser, tænker og skriver en plan, som du godkender først.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">2.2 Bed om planen</span>
+        <details class="prompt-fold">
+          <summary>Vis planprompten, indsæt hele blokken</summary>
+          <div class="prompt">Lav en plan for skelettet til appen, som beskrevet i CLAUDE.md. Skelettet skal bestå af: server.ts med Bun.serve, der serverer index.html og har endpointet GET /api/dashboard. server/db.ts, der åbner databasen read-only, kører data/rettelser.sql og eksporterer en query-funktion. index.html og app.tsx med en header (titel, undertitel og en badge der viser om appen kører som Mock eller Claude, hentet fra tilstand i server/provider.ts) og et Dashboard med fire KPI-kort: samlede omkostninger 2025, antal bilag, største kontogruppe, og andel af omkostningsbasen der ligger på formueforvaltning. Under kortene en stablet søjlegraf med kontogruppe pr. kvartal, og en tabel med de ti største kreditorer. Ikke spørg-panelet endnu. Skriv i planen, hvordan jeg selv kan kontrollere, at de fire KPI-tal er rigtige.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        </details>
+        <div class="expect">En plan med de filer, der skal laves, og et afsnit om kontrol: hvilke tal du skal forvente på de fire kort, og hvordan du selv kan slå dem op. Planen tager typisk 3 til 5 minutter. Læs den, mens den skrives.</div>
+        <div class="hint">Mangler kontrolafsnittet, eller er det tyndt, så skriv: "Planen mangler en måde, jeg selv kan tjekke KPI-tallene. Tilføj det." Det er hele pointen med plan mode, at du retter planen, ikke koden.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">2.3 Godkend og byg</span>
+        <div class="prompt">Planen er godkendt. Byg skelettet.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Når Claude er færdig, så bed den starte appen:</div>
+        <div class="prompt">Start appen med bun run dev i baggrunden, og fortæl mig adressen.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Åbn <code>http://localhost:3000</code> i en browser.</div>
+        <div class="expect">Et dashboard med fire KPI-kort, en stablet søjlegraf pr. kvartal og en tabel med ti kreditorer. Badgen i headeren siger <b>Mock</b>. Hold tallene på kortene op mod dem, planen lovede.</div>
+        <div class="insight"><strong>Læringen:</strong> Planen er kontrakten. Da Claude skrev "302.287.300 kr." i planen, før den skrev en linje kode, fik du noget at holde koden op imod. Uden planen havde du kun kunnet sige "det ser rigtigt ud".</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 3 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">3</div>
+      <h2>Spørg-panelet</h2>
+      <p>Dashboardet svarer på de spørgsmål, nogen har besluttet på forhånd. Nu tilføjer vi det, der svarer på dine. Og vigtigst: det skal vise, hvordan det kom frem til svaret.</p>
+
+      <div class="step">
+        <span class="step-label">3.1 Byg panelet</span>
+        <p>Skift tilbage til <b>Accept edits</b> med Shift+Tab. Bliv i samme samtale.</p>
+        <details class="prompt-fold">
+          <summary>Vis byggeprompten, indsæt hele blokken</summary>
+          <div class="prompt">Byg spørg-panelet under dashboardet. Et tekstfelt hvor jeg skriver et spørgsmål på dansk og en knap "Spørg". Serveren får endpointet POST /api/ask, der kalder spoerg() fra server/provider.ts, afviser SQL der ikke består erLaesning(), kører SQL'en gennem server/db.ts og returnerer titel, sql, forklaring, graftype og rækkerne. I panelet vises svaret i to kolonner: til venstre SQL'en i en kodeblok med kopiknap og under den forklaringen med overskriften "Hvad gør den". Til højre resultattabellen med dansk talformat. Ingen graf endnu. Vis en fejlbesked pænt, hvis SQL'en afvises eller fejler.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        </details>
+        <div class="expect">Appen genindlæser selv. Under dashboardet står et tekstfelt og en Spørg-knap.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">3.2 Stil tre spørgsmål</span>
+        <div class="action">Skriv dem i appen, ét ad gangen. Læs forklaringen <em>før</em> du kigger på tabellen.</div>
+        <div class="prompt">Hvad brugte vi på licenser i Q4, pr. kreditor?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="prompt">Hvordan udvikler personaleomkostninger sig pr. måned?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="prompt">Hvem er vores fem største eksterne rådgivere?<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Til venstre SQL og forklaring, til højre en tabel. På licensspørgsmålet står den samme leverandør to gange med lidt forskelligt navn. Forklaringen siger selv, at den ikke slår dem sammen. Det er ikke en fejl i appen, det er en fejl i udtrækket, og appen fortæller dig det.</div>
+        <div class="insight"><strong>Læringen:</strong> SQL'en er beviset for dem, der kan læse den. Forklaringen er beviset for alle andre. Ingen af delene kræver, at du stoler på Claude. Du kan se, hvad den gjorde, og hvad den ikke tog højde for.</div>
+        <div class="hint">Appen kører uden API-nøgle lige nu, så den svarer kun på et fast sæt spørgsmål. Stiller du et andet, siger den det pænt. Nøglen kommer i fase 6.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 4 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">4</div>
+      <h2>Grafen</h2>
+      <p>Én lille prompt, ét nyt lag. Bemærk hvor lidt du skal skrive, når resten allerede står i mappen.</p>
+
+      <div class="step">
+        <span class="step-label">4.1 Tilføj grafen</span>
+        <div class="prompt">Tilføj en graf under resultattabellen ud fra graftype: soejle giver et søjlediagram med første tekstkolonne som kategori og første talkolonne som værdi, linje giver et linjediagram med samme regel, ingen giver ingen graf. Brug Recharts og sekundærfarverne fra styles.css. Grafen skal have dansk talformat på aksen og i tooltip.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Stil personalespørgsmålet igen. Det skal give en linje. Stil licensspørgsmålet igen. Det skal give søjler.</div>
+        <div class="expect">En graf under tabellen, med danske tal på aksen. Modellen har valgt graftypen, ikke du.</div>
+        <div class="insight"><strong>Læringen:</strong> Små prompts, små ændringer, hurtig kontrol. Det er ikke langsommere end én stor prompt. Det er hurtigere, fordi du fanger fejl, mens de er små.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 5 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">5</div>
+      <h2>Kontrollen</h2>
+      <p>Alt ser rigtigt ud. Tallene står pænt på kortene, og graferne er flotte. Nu kører vi kontrollen, og så ser vi.</p>
+
+      <div class="step">
+        <span class="step-label">5.1 Kør kontrollen og find årsagen</span>
+        <div class="prompt">Kør bun run kontrol. To kontroller fejler. Find ud af, præcis hvilke posteringer der gør, at totalen for 2025 afviger fra kontroltotalen, og hvorfor. Foreslå en rettelse, men ret ikke noget, før jeg har godkendt den. Rettelsen skal laves som et view i data/rettelser.sql, ikke som en sletning, og den skal beskrives i data/RETTELSER.md med bilagsnumre, beløb og begrundelse.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Kontrollen viser to røde linjer: totalen afviger 48.000 kr. fra Finanskubens kontroltotal, og der er én dublet. Claude finder to bilag i oktober med samme dato, konto, kreditor, beløb og tekst, og foreslår et view, der beholder det første. Den har ikke ændret noget endnu.</div>
+        <div class="hint">Kontrol 4 fejler også, men står som "solo-opgave". Den lader I ligge til fase 7.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">5.2 Godkend rettelsen, og kør igen</span>
+        <div class="action">Læs forslaget. Er det en view og et notat, ikke en sletning? Nævner det bilagsnumrene? Så godkend:</div>
+        <div class="prompt">Godkendt. Skriv begge filer, og kør bun run kontrol igen.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="expect">Kontrol 1, 2, 3 og 5 er grønne. Totalen på dashboardet er faldet med 48.000 kr., og antal bilag med ét. Databasen er ikke ændret. Rettelsen ligger som en view i <code>data/rettelser.sql</code>, og begrundelsen i <code>data/RETTELSER.md</code>.</div>
+        <div class="insight"><strong>Læringen:</strong> Det pæne tal og det rigtige tal var ikke det samme, og det var kontrollen, der afgjorde forskellen, ikke øjemål. En kontrol, der kan fejle, er det, der gør resten troværdigt. Og rettelsen kan læses af en revisor, fordi den er en fil, ikke et klik.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 6 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">6</div>
+      <h2>Filen i mappen, og Claude i appen</h2>
+      <p>Et svar i et vindue forsvinder. Et svar i en fil kan sendes, vedlægges og findes igen. Og så skal appen have en rigtig model bag sig.</p>
+
+      <div class="step">
+        <span class="step-label">6.1 Gem som rapport</span>
+        <div class="prompt">Tilføj knappen "Gem som rapport" over resultattabellen. Når jeg klikker, skal serveren gemme to filer i rapporter/: en .sql med forespørgslen og en .md med spørgsmålet, titlen, forklaringen, dato og resultattabellen som markdown-tabel. Filnavnet er dagens dato og en kort slug af titlen. Vis filnavnene i panelet, når det er gemt.<button class="copy-btn" type="button" aria-label="Kopier prompt">Kopier</button></div>
+        <div class="action">Stil licensspørgsmålet, klik <b>Gem som rapport</b>, og åbn <code>rapporter/</code> i mappen.</div>
+        <div class="expect">To filer med dagens dato i navnet. Åbn .md-filen: spørgsmål, forklaring, SQL og tabel, klar til at sende videre.</div>
+      </div>
+
+      <div class="step">
+        <span class="step-label">6.2 Slå Claude til</span>
+        <p>Indtil nu har appen svaret fra et fast sæt svar. Underviseren viser nu et link på skærmen. Bag det ligger én linje tekst.</p>
+        <div class="action">Åbn linket, indtast adgangskoden underviseren siger, og kopiér linjen. Lav en fil i mappen, der hedder <code>.env</code>, indsæt linjen, og gem. Du kan også bede Claude om det: "Opret .env med denne linje", og indsæt linjen.</div>
+        <div class="action">Genstart appen: bed Claude om at stoppe og starte <code>bun run dev</code> igen. Genindlæs browseren.</div>
+        <div class="expect">Badgen i headeren siger nu <b>Claude</b>. Stil et spørgsmål, der ikke var med i det faste sæt: "Hvilke omkostningssteder bruger mest på eksterne rådgivere, og hvor stor en andel er det af deres samlede omkostninger?"</div>
+        <div class="insight"><strong>Læringen:</strong> Nøglen kom aldrig i materialet, aldrig i en chat og aldrig i et screenshot. Den ligger i én fil på din maskine, som git ignorerer, og den bliver slettet efter workshoppen. Det er trifecta-sliden i praksis: private data, indhold udefra og en vej ud må ikke mødes uden at nogen har taget stilling.</div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── FASE 7 ───────────────────────── -->
+    <section class="phase">
+      <div class="phase-num">7</div>
+      <h2>Solo: to fælder mere, og jeres egne spørgsmål</h2>
+      <p>Herfra er der ingen færdige prompts. Udtrækket har stadig to fejl, og appen kan meget mere end den gør.</p>
+
+      <div class="mission">
+        <span class="label">Opgave</span>
+        <h3>Find de to sidste fejl, og byg det, I selv mangler</h3>
+        <p>Kontrol 4 fejler stadig. Og på licensspørgsmålet stod samme leverandør to gange. Begge dele kan rettes på samme måde som i fase 5: en view, et notat, en kontrol der bliver grøn.</p>
+      </div>
+
+      <div class="step" style="margin-top: 22px;">
+        <span class="step-label">7.1 Fordelingen der ikke rammer hele basen</span>
+        <p>Kontrol 4 siger, at fordelingen på formueforvaltning og medlemsadministration kun dækker knap 90 procent af omkostningsbasen. Resten forsvinder i stilhed. Bed Claude finde ud af hvilket omkostningssted der mangler i fordelingsnøglen, og hvad der skal til, for at kontrollen består. Beslut selv, om det er en rettelse i data eller en advarsel i appen, og få begrundelsen ned i <code>data/RETTELSER.md</code>.</p>
+      </div>
+
+      <div class="step">
+        <span class="step-label">7.2 Kreditoren med to navne</span>
+        <p>Én softwareleverandør er oprettet to gange med lidt forskelligt navn. Bed Claude finde alle kreditorer, der ligner hinanden, og foreslå en view, der slår dem sammen. Overvej: skal appen bruge den view som standard, eller skal den vise begge og advare?</p>
+      </div>
+
+      <div class="step">
+        <span class="step-label">7.3 Jeres egne spørgsmål og jeres egne data</span>
+        <p>Nogle retninger:</p>
+        <ul>
+          <li><strong>Budget mod realiseret.</strong> Bed Claude generere en budgettabel pr. kontogruppe pr. kvartal, og få appen til at vise afvigelsen.</li>
+          <li><strong>Fejlkonteringer.</strong> Hvilke posteringer ligger på en konto, deres kreditor normalt ikke rammer? Det er det, PC 5 kalder "hurtigt at identificere fejlkonteringer".</li>
+          <li><strong>Gemte spørgsmål som kontrol.</strong> Tag en rapport fra <code>rapporter/</code> og gør den til en gylden kontrol i <code>kontroller/</code>, så den kører hver gang.</li>
+          <li><strong>Jeres egen CSV.</strong> Læg et udtræk med ufølsomme tal i <code>data/</code>, og bed Claude importere det i databasen med et lille script. Så virker resten af appen på jeres kolonner.</li>
+        </ul>
+        <div class="hint">Formulér spørgsmålet, før du beder om featuren. "Vis mig hvilke kreditorer der er vokset mest fra Q1 til Q4" giver et svar. "Lav flere grafer" giver pynt.</div>
+        <div class="insight"><strong>Læringen:</strong> I har nu en mappe med en app, en datamodel, en kontrol og en logbog over rettelser. Det er ikke drift, det er en prototype. Men det er en prototype, hvor hvert tal kan spores tilbage til en SQL og en forklaring, og det er mere end de fleste Excel-ark kan sige.</div>
+      </div>
+    </section>
+
+    <details class="context" style="margin-top: 60px;">
+      <summary>Hvis noget går galt: FACIT</summary>
+      <div class="context-body">
+        <p>I <code>session2-code/FACIT/</code> ligger den app, vi selv fik ud af at køre alle prompts igennem, inklusiv rettelsen fra fase 5 og en gemt rapport. Kør <code>bun install</code> og <code>bun run dev</code> i den mappe, hvis du vil se slutresultatet, eller kopiér en fil derfra, hvis din egen version er kørt fast. Den er et eksempel, ikke et facit i skolebetydningen. Din version må gerne være anderledes.</p>
+      </div>
+    </details>
+
+  </main>
+  <script>
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const host = btn.parentElement;
+        const text = Array.from(host.childNodes)
+          .filter((n) => n.nodeType === Node.TEXT_NODE || (n.nodeType === Node.ELEMENT_NODE && n !== btn))
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+        try {
+          await navigator.clipboard.writeText(text);
+          const orig = btn.textContent;
+          btn.textContent = 'Kopieret';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+        } catch (e) {
+          btn.textContent = 'Fejl';
+          setTimeout(() => { btn.textContent = 'Kopier'; }, 1500);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
