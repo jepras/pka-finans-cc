@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "spoergsmaal": "Stemmer de samlede omkostninger for 2025 med kontroltotalen fra Finanskuben?",
+    "sql": "SELECT (SELECT SUM(beloeb) FROM transaktioner_renset) - (SELECT SUM(total_ifoelge_finanskuben) FROM kontroltotaler) AS afvigelse",
+    "forventet": 0,
+    "tolerance": 1
+  },
+  {
+    "id": 2,
+    "spoergsmaal": "Hvem er den største licensleverandør i Q4?",
+    "sql": "SELECT k.kreditornavn FROM transaktioner_renset t JOIN kreditorer k ON k.kreditornr = t.kreditornr WHERE t.kontonr = '6010' AND t.kvartal = 'Q4' GROUP BY k.kreditornavn ORDER BY SUM(t.beloeb) DESC LIMIT 1",
+    "forventet": "Nordlys Software ApS"
+  },
+  {
+    "id": 3,
+    "spoergsmaal": "Er alle bilag kun bogført én gang?",
+    "sql": "SELECT COUNT(*) AS dubletter FROM (SELECT kontonr, kreditornr, omkostningssted, beloeb, bogfoeringsdato, posteringstekst FROM transaktioner_renset GROUP BY 1,2,3,4,5,6 HAVING COUNT(*) > 1)",
+    "forventet": 0
+  },
+  {
+    "id": 4,
+    "spoergsmaal": "Rammer fordelingen på formueforvaltning og medlemsadministration hele omkostningsbasen?",
+    "sql": "SELECT ROUND(100.0 * SUM(CASE WHEN f.omkostningssted IS NOT NULL THEN t.beloeb ELSE 0 END) / SUM(t.beloeb), 1) AS procent_fordelt FROM transaktioner_renset t LEFT JOIN fordelingsnoegle f ON f.omkostningssted = t.omkostningssted",
+    "forventet": 100,
+    "tolerance": 0.05,
+    "solo": true
+  },
+  {
+    "id": 5,
+    "spoergsmaal": "Ligger alle transaktioner i 2025?",
+    "sql": "SELECT COUNT(*) AS udenfor FROM transaktioner_renset WHERE bogfoeringsdato < '2025-01-01' OR bogfoeringsdato > '2025-12-31'",
+    "forventet": 0
+  }
+]
