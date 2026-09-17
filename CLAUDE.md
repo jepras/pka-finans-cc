@@ -48,10 +48,9 @@ Denne mappe (`pka-finans-cc/`) er selve git-repoet:
 
 Mappestruktur:
 
-- `opgaver/`: opgavebeskrivelser (HTML)
-- `presentation/`: slidedecks (HTML)
 - `session1-chat/`: materiale til session 1 (Claude chat)
-- `session2-code/`: materiale til session 2 (Claude Code)
+- `session2-code/`: materiale til session 2 (Claude Code). Kun data og guide, deltagerne bygger appen selv
+- `andet/session2-facit/`: det færdige eksempel på session 2-appen, uden for arbejdsmappen så Claude Code ikke ser den
 
 Alt i dette repo er **offentligt**. Læg aldrig kundedata, interne noter eller credentials her.
 

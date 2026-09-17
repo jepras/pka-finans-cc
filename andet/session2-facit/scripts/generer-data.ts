@@ -3,7 +3,7 @@
 import { Database } from "bun:sqlite";
 import { unlinkSync, existsSync } from "node:fs";
 
-const FIL = new URL("../../session2-code/data/finanskube-2025.sqlite", import.meta.url).pathname;
+const FIL = new URL("../../../session2-code/data/finanskube-2025.sqlite", import.meta.url).pathname;
 if (existsSync(FIL)) unlinkSync(FIL);
 const db = new Database(FIL);
 
