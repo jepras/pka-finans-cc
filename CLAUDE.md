@@ -50,7 +50,9 @@ Mappestruktur:
 
 - `session1-chat/`: materiale til session 1 (Claude chat)
 - `session2-code/`: materiale til session 2 (Claude Code). Kun data og guide, deltagerne bygger appen selv
-- `andet/session2-facit/`: det færdige eksempel på session 2-appen, uden for arbejdsmappen så Claude Code ikke ser den
+- `andet/`: facit og hjælpemateriale, ikke noget deltagerne skal bruge undervejs. `andet/session2-facit/` er det færdige eksempel på session 2-appen.
+
+**Claude må ikke læse noget i `andet/`.** Hverken med Read, Glob, Grep, Bash eller subagenter, og heller ikke som del af en bredere søgning i repoet. Mappen indeholder facit, og hele pointen med session 2 er at deltagerne bygger appen selv. Hvis en opgave ser ud til at kræve indholdet i `andet/`, så spørg brugeren i stedet for at åbne filerne. Undtagelsen er hvis brugeren udtrykkeligt beder om det i den aktuelle samtale.
 
 Alt i dette repo er **offentligt**. Læg aldrig kundedata, interne noter eller credentials her.
 
