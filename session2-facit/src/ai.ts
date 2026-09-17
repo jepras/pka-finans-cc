@@ -43,11 +43,17 @@ const svarSkema = z.object({
   forklaring: z
     .string()
     .describe("2-4 sætninger på almindeligt dansk om hvad forespørgslen gør. Ingen SQL-jargon."),
+  // Modellen sender af og til forbeholdene som én tekst i stedet for en liste.
+  // Vi tager imod begge dele og deler teksten op i punkter, så svaret ikke afvises.
   forbehold: z
-    .array(z.string())
-    .min(2)
-    .max(6)
-    .describe("Hvad forespørgslen IKKE tager højde for. Konkret, ikke generelle forbehold."),
+    .preprocess(
+      (v) =>
+        typeof v === "string"
+          ? v.split(/(?<=[.!?])\s+(?=[A-ZÆØÅ])/).map((t) => t.trim()).filter(Boolean)
+          : v,
+      z.array(z.string()).max(6),
+    )
+    .describe("Liste med 2 til 6 punkter om hvad forespørgslen IKKE tager højde for. Konkret, ikke generelle forbehold."),
   graf: grafSkema,
 });
 
@@ -116,7 +122,6 @@ export async function spoergClaude(
     schema: svarSkema,
     system: systemPrompt(),
     prompt,
-    temperature: 0,
   });
 
   return object as ClaudeSvar;
